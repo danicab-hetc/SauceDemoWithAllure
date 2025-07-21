@@ -72,5 +72,7 @@ public class CItem {
         }
         return id;
     }
-
+    public String getAddRemoveButtonText(){
+        return getAddRemoveButton().getText();
+    }
 }

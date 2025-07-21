@@ -26,7 +26,7 @@ public class HomeAssert {
         return this;
     }
 
-    public void itemsAreSortedBySortName(String sortName) {
+    public HomeAssert itemsAreSortedBySortName(String sortName) {
         boolean sorted = false;
         switch (sortName) {
             case "Name (A to Z)" -> sorted = homePage.isSortedAZ();
@@ -36,6 +36,7 @@ public class HomeAssert {
             default -> Assert.fail("Unknown sort option: " + sortName);
         }
         Assert.assertTrue(sorted, "Products are not sorted correctly by " + sortName);
+        return this;
     }
 
     public HomeAssert cartIconNumberIsValid(int quantity) {
@@ -45,7 +46,7 @@ public class HomeAssert {
         return this;
     }
 
-    public void allItemsHaveContent() {
+    public HomeAssert allItemsHaveContent() {
         SoftAssert softAssert = new SoftAssert();
         for(CItem item: homePage.getProducts()){
             softAssert.assertFalse(item.getTitleText().isEmpty(), "Title is empty: " + item.getIdByTitle());
@@ -55,10 +56,11 @@ public class HomeAssert {
             softAssert.assertTrue(item.getAddRemoveButton().isDisplayed(), "AddRemove button is not displayed: " + item.getIdByTitle());
         }
         softAssert.assertAll("Not all items have content");
+        return this;
     }
 
 
-    public void buttonChangeNameTo(String buttonName, List<CItem> items) {
+    public HomeAssert buttonChangeNameTo(String buttonName, List<CItem> items) {
         SoftAssert softAssert = new SoftAssert();
         for(CItem item: items) {
             softAssert.assertTrue(
@@ -66,9 +68,18 @@ public class HomeAssert {
                     "Button text is not " + buttonName + " for item: " + item.getTitleText());
         }
         softAssert.assertAll("Not all buttons for items have changed text to '" + buttonName + "'");
+        return this;
     }
 
-    public void allItemsHaveValidPriceFormat() {
+    public HomeAssert buttonChangeNameTo(String buttonName, CItem item) {
+        Assert.assertTrue(
+                item.getAddRemoveButtonText().equalsIgnoreCase(buttonName),
+                "Button text is not " + buttonName + " for item: " + item.getTitleText()
+        );
+        return this;
+    }
+
+    public HomeAssert allItemsHaveValidPriceFormat() {
         SoftAssert softAssert = new SoftAssert();
         for(CItem item: homePage.getProducts()){
             String price = item.getPriceText();
@@ -77,5 +88,6 @@ public class HomeAssert {
             softAssert.assertEquals(price.split("\\.")[1].length(), 2, "Price doesn't have 2 digits after the dot " + item.getIdByTitle());
         }
         softAssert.assertAll("Not all items have valid price format.");
+        return this;
     }
 }

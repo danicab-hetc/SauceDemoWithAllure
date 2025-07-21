@@ -131,6 +131,8 @@ public class HomeTest extends BaseTest {
 
     }
 
+    //===================================================
+
     @Test(description = "All products have valid price format")
     public void testValidPriceFormat(){
         homePage.assertThat().allItemsHaveValidPriceFormat();

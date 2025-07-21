@@ -36,7 +36,7 @@ public class ItemAssert {
     }
 
     public ItemAssert itemAddRemoveButtonIsSame(String buttonName) {
-        Assert.assertEquals(itemPage.getAddRemoveButtonName(), buttonName, "Button names are not the same for: " + itemPage.getId());
+        Assert.assertEquals(itemPage.getAddButtonName(), buttonName, "Button names are not the same for: " + itemPage.getId());
         return this;
     }
 
@@ -45,4 +45,19 @@ public class ItemAssert {
         return this;
     }
 
+    public ItemAssert buttonNameChangesTo(String name) {
+        switch(name) {
+            case "Remove" -> Assert.assertTrue(itemPage.getRemoveButtonName().equalsIgnoreCase("Remove"), "Button name has not changed to 'Remove'");
+            case "Add to cart" -> Assert.assertTrue(itemPage.getAddButtonName().equalsIgnoreCase("Add to cart"), "Button name has not changed to 'Add to cart'");
+            default -> Assert.fail("Unknown button name has been passed as an argument");
+        }
+        return this;
+    }
+
+    public ItemAssert cartIconNumberIsValid(int quantity) {
+        String number = itemPage.getMenu().getCartIcon().getText();
+        int actualQuantity = number.isEmpty() ? 0 : Integer.parseInt(number);
+        Assert.assertEquals(actualQuantity, quantity, "Cart icon number is not valid");
+        return this;
+    }
 }
