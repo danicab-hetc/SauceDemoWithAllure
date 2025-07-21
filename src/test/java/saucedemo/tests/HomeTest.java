@@ -1,13 +1,17 @@
 package saucedemo.tests;
 
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
+import saucedemo.components.CItem;
 import saucedemo.pages.HomePage;
+import saucedemo.pages.ItemPage;
 import saucedemo.pages.LoginPage;
 import saucedemo.utilities.DataManager;
+
+import java.util.List;
 
 public class HomeTest extends BaseTest {
     private HomePage homePage;
@@ -28,8 +32,8 @@ public class HomeTest extends BaseTest {
         return DataManager.getSortOptions();
     }
     @Test(
-            description = "When user applies sort option, then items sort properly",
-            dataProvider = "sortOptions"
+        description = "When user applies any of the sort options, then items sort properly",
+        dataProvider = "sortOptions"
     )
     public void testSortBy(String sortName){
         homePage.sortProductBy(sortName);
@@ -43,7 +47,23 @@ public class HomeTest extends BaseTest {
         return DataManager.getQuantity();
     }
     @Test(
-        description = "When user clicks on add to cart button then cart icon updates!",
+        description = "When user clicks on item addRemoveButton, its name is changed to opposite",
+        dataProvider = "itemQuantity"
+    )
+    public void testClickingOnItemButton(String quantityType){
+        int quantity = (quantityType.equals("one")) ? 1 : homePage.getProducts().size();
+
+        List<CItem> items = homePage.clickOnAddToCartButtons(quantity);
+        homePage.assertThat().buttonChangeNameTo("Remove", items);
+
+        items = homePage.clickOnAddToCartButtons(quantity);
+        homePage.assertThat().buttonChangeNameTo("Add to cart", items);
+    }
+
+    //===================================================
+
+    @Test(
+        description = "When user clicks on add to cart buttons then cart icon updates!",
         dataProvider = "itemQuantity"
     )
     public void testAddToCartIcon(String quantityType){
@@ -56,8 +76,8 @@ public class HomeTest extends BaseTest {
     //===================================================
 
     @Test(
-            description = "When user clicks on remove button then cart icon updates!",
-            dataProvider = "itemQuantity"
+        description = "When user clicks on remove button then cart icon updates!",
+        dataProvider = "itemQuantity"
     )
     public void testRemoveFromCartIcon(String quantityType){
         int quantity = (quantityType.equals("one")) ? 1 : homePage.getProducts().size();
@@ -70,9 +90,49 @@ public class HomeTest extends BaseTest {
 
     //===================================================
 
-    @Test(description = "All items contain all elements")
+    @Test(description = "All items contain data")
     public void testAllItemsHaveContent(){
         homePage.assertThat().allItemsHaveContent();
     }
 
+    //===================================================
+
+    @DataProvider(name = "itemClick")
+    public Object[][] getItemClick() {
+        return DataManager.getItemClick();
+    }
+    @Test(
+            description = "When user clicks on item image/title then user is redirected to the item page and all data is valid",
+            dataProvider = "itemClick"
+    )
+    public void testRedirectToItemPages(String titleOrImage){
+        for (int i = 0; i < homePage.getProducts().size(); i++){
+            CItem item = homePage.getProducts().get(i) ;
+            String expectedTitle = item.getTitleText();
+            String expectedDescription = item.getDescriptionText();
+            double expectedPriceValue = item.getPriceValue();
+            String expectedImageSrc = item.getImageSrc();
+            String expectedAddRemoveButtonText = item.getAddRemoveButton().getText().trim();
+            String expectedId = item.getIdBy(titleOrImage);
+
+            ItemPage itemPage = homePage.clickOnItem(titleOrImage, item);
+            itemPage.waitForPageToLoad();
+            itemPage.assertThat()
+                    .itemTitleIsSame(expectedTitle)
+                    .itemDescriptionIsSame(expectedDescription)
+                    .itemPriceIsSame(expectedPriceValue)
+                    .itemImageSrcIsSame(expectedImageSrc)
+                    .itemAddRemoveButtonIsSame(expectedAddRemoveButtonText)
+                    .itemUrlIsSame(itemPage.getUrl() + expectedId);
+
+            itemPage.clickOnBackToProductsButton();
+            homePage.waitForPageToLoad();
+        }
+
+    }
+
+    @Test(description = "All products have valid price format")
+    public void testValidPriceFormat(){
+        homePage.assertThat().allItemsHaveValidPriceFormat();
+    }
 }

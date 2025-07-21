@@ -64,4 +64,11 @@ public class DataManager {
                 {"all"}
         };
     }
+
+    public static Object[][] getItemClick() {
+        return new Object[][] {
+                {"title"},
+                {"image"}
+        };
+    }
 }

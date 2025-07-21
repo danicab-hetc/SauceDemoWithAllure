@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import saucedemo.asserts.LoginAssert;
 import saucedemo.base.BasePage;
-import saucedemo.components.Menu;
+import saucedemo.components.CMenu;
 import saucedemo.utilities.Route;
 
 public class LoginPage extends BasePage {
@@ -15,7 +15,7 @@ public class LoginPage extends BasePage {
         super(driver);
         super.url += Route.LOGIN;
     }
-    public Menu getMenu(){
+    public CMenu getMenu(){
         return null;
     }
     @Override

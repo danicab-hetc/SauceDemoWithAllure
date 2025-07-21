@@ -1,11 +1,12 @@
 package saucedemo.asserts;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
-import saucedemo.components.Item;
+import saucedemo.components.CItem;
 import saucedemo.pages.HomePage;
+
+import java.util.List;
 
 public class HomeAssert {
     private WebDriver driver;
@@ -46,13 +47,35 @@ public class HomeAssert {
 
     public void allItemsHaveContent() {
         SoftAssert softAssert = new SoftAssert();
-        for(Item item: homePage.getProducts()){
-            softAssert.assertFalse(item.getTitleText().isEmpty(), "Title is empty: " + item.getId());
-            softAssert.assertFalse(item.getDescriptionText().isEmpty(), "Description is empty: " + item.getId());
-            softAssert.assertFalse(item.getPriceText().isEmpty(), "Price is empty: " + item.getId());
-            softAssert.assertFalse(item.getImageSrc().contains("sl-404.168b1cce"), "Image is not valid: " + item.getId());
-            softAssert.assertTrue(item.getAddRemoveButton().isDisplayed(), "AddRemove button is not displayed: " + item.getId());
+        for(CItem item: homePage.getProducts()){
+            softAssert.assertFalse(item.getTitleText().isEmpty(), "Title is empty: " + item.getIdByTitle());
+            softAssert.assertFalse(item.getDescriptionText().isEmpty(), "Description is empty: " + item.getIdByTitle());
+            softAssert.assertFalse(item.getPriceText().isEmpty(), "Price is empty: " + item.getIdByTitle());
+            softAssert.assertFalse(item.getImageSrc().contains("sl-404.168b1cce"), "Image is not valid: " + item.getIdByTitle());
+            softAssert.assertTrue(item.getAddRemoveButton().isDisplayed(), "AddRemove button is not displayed: " + item.getIdByTitle());
         }
         softAssert.assertAll("Not all items have content");
+    }
+
+
+    public void buttonChangeNameTo(String buttonName, List<CItem> items) {
+        SoftAssert softAssert = new SoftAssert();
+        for(CItem item: items) {
+            softAssert.assertTrue(
+                    item.getAddRemoveButton().getText().equalsIgnoreCase(buttonName),
+                    "Button text is not " + buttonName + " for item: " + item.getTitleText());
+        }
+        softAssert.assertAll("Not all buttons for items have changed text to '" + buttonName + "'");
+    }
+
+    public void allItemsHaveValidPriceFormat() {
+        SoftAssert softAssert = new SoftAssert();
+        for(CItem item: homePage.getProducts()){
+            String price = item.getPriceText();
+            softAssert.assertTrue(price.startsWith("$"), "Price doesn't start with $ " + item.getIdByTitle());
+            softAssert.assertEquals(price.split("\\.").length, 2, "Price has problem with dots " + item.getIdByTitle());
+            softAssert.assertEquals(price.split("\\.")[1].length(), 2, "Price doesn't have 2 digits after the dot " + item.getIdByTitle());
+        }
+        softAssert.assertAll("Not all items have valid price format.");
     }
 }

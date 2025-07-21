@@ -7,12 +7,12 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Menu {
+public class CMenu {
     private WebDriver driver;
     private WebDriverWait wait;
     private Actions actions;
 
-    public Menu(WebDriver driver, WebDriverWait wait, Actions actions) {
+    public CMenu(WebDriver driver, WebDriverWait wait, Actions actions) {
         this.driver = driver;
         this.wait = wait;
         this.actions = actions;

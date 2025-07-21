@@ -3,7 +3,7 @@ package saucedemo.base;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import saucedemo.components.Menu;
+import saucedemo.components.CMenu;
 import saucedemo.utilities.Route;
 
 import java.time.Duration;
@@ -30,8 +30,8 @@ public abstract class BasePage {
         waitForPageToLoad();
     }
 
-    public Menu getMenu() {
-        return new Menu(driver, wait, actions);
+    public CMenu getMenu() {
+        return new CMenu(driver, wait, actions);
     }
 
     public abstract void waitForPageToLoad();

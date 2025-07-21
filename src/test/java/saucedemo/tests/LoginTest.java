@@ -19,6 +19,8 @@ public class LoginTest extends BaseTest {
         loginPage.navigateTo();
     }
 
+    //===================================================
+
     @DataProvider(name = "validUsers")
     public Object[][] getValidUsers() {
         return DataManager.excelToDataProvider(
@@ -35,6 +37,8 @@ public class LoginTest extends BaseTest {
                 .userIsOnHomePage()
                 .logOutButtonIsPresent();
     }
+
+    //===================================================
 
     @DataProvider(name = "invalidUsers")
     public Object[][] getInvalidUsers() {
@@ -53,4 +57,8 @@ public class LoginTest extends BaseTest {
                 .loginButtonIsVisible()
                 .errorMessageAppears(user.getMessage());
     }
+
+    //===================================================
+
+    // User can not directly navigate to any page except login page without logging in previously
 }

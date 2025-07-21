@@ -7,5 +7,5 @@ public class Route {
     public static final String LOGIN = "/";
     public static final String HOME = "/inventory.html";
     public static final String CART = "";
-    public static final String ITEM = "";
+    public static final String ITEM = "/inventory-item.html?id=";
 }
