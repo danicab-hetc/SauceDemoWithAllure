@@ -6,6 +6,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
 import saucedemo.components.CItem;
+import saucedemo.dto.ItemDto;
 import saucedemo.pages.HomePage;
 import saucedemo.pages.ItemPage;
 import saucedemo.pages.LoginPage;
@@ -107,23 +108,25 @@ public class HomeTest extends BaseTest {
     )
     public void testRedirectToItemPages(String titleOrImage){
         for (int i = 0; i < homePage.getProducts().size(); i++){
-            CItem item = homePage.getProducts().get(i) ;
-            String expectedTitle = item.getTitleText();
-            String expectedDescription = item.getDescriptionText();
-            double expectedPriceValue = item.getPriceValue();
-            String expectedImageSrc = item.getImageSrc();
-            String expectedAddRemoveButtonText = item.getAddRemoveButton().getText().trim();
-            String expectedId = item.getIdBy(titleOrImage);
+            CItem item = homePage.getProducts().get(i);
+            ItemDto expected = new ItemDto(
+                    item.getIdBy(titleOrImage),
+                    item.getImageSrc(),
+                    item.getTitleText(),
+                    item.getDescriptionText(),
+                    item.getPriceText(),
+                    item.getAddRemoveButtonText()
+            );
 
             ItemPage itemPage = homePage.clickOnItem(titleOrImage, item);
             itemPage.waitForPageToLoad();
             itemPage.assertThat()
-                    .itemTitleIsSame(expectedTitle)
-                    .itemDescriptionIsSame(expectedDescription)
-                    .itemPriceIsSame(expectedPriceValue)
-                    .itemImageSrcIsSame(expectedImageSrc)
-                    .itemAddRemoveButtonIsSame(expectedAddRemoveButtonText)
-                    .itemUrlIsSame(itemPage.getUrl() + expectedId);
+                    .itemTitleIsSame(expected.title())
+                    .itemDescriptionIsSame(expected.description())
+                    .itemPriceIsSame(expected.price())
+                    .itemImageSrcIsSame(expected.image())
+                    .itemAddRemoveButtonIsSame(expected.buttonText())
+                    .itemUrlIsSame(itemPage.getUrl() + expected.id());
 
             itemPage.clickOnBackToProductsButton();
             homePage.waitForPageToLoad();

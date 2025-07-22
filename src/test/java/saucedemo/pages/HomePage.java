@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.Select;
 import saucedemo.asserts.HomeAssert;
 import saucedemo.base.BasePage;
 import saucedemo.components.CItem;
+import saucedemo.dto.ItemDto;
 import saucedemo.utilities.Route;
 
 import java.util.ArrayList;
@@ -119,5 +120,23 @@ public class HomePage extends BasePage {
             }
         }
         return new ItemPage(driver);
+    }
+
+    public List<ItemDto> addItemsToCart(int number) {
+        List<CItem> items = getProducts();
+        List<ItemDto> result = new ArrayList<>();
+        for(int i = 0; i < number; i++) {
+            CItem item = items.get(i);
+            item.getAddRemoveButton().click();
+            result.add(new ItemDto(
+                    item.getIdByTitle(),
+                    item.getImageSrc(),
+                    item.getTitleText(),
+                    item.getDescriptionText(),
+                    item.getPriceText(),
+                    item.getAddRemoveButtonText()
+            ));
+        }
+        return result;
     }
 }

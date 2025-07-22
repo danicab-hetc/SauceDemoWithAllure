@@ -25,8 +25,8 @@ public class ItemAssert {
     }
 
 
-    public ItemAssert itemPriceIsSame(double priceValue) {
-        Assert.assertEquals(itemPage.getPriceValue(), priceValue, "Prices are not the same for: " + itemPage.getId());
+    public ItemAssert itemPriceIsSame(String priceText) {
+        Assert.assertEquals(itemPage.getPriceText(), priceText, "Prices are not the same for: " + itemPage.getId());
         return this;
     }
 

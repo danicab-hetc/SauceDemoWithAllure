@@ -14,10 +14,10 @@ public class CItem {
     private final By title = By.className("inventory_item_name");
     private final By description = By.className("inventory_item_desc");
     private final By price = By.className("inventory_item_price");
-    private final By addRemoveButton = By.className("btn_inventory");
+    private final By addRemoveButton = By.cssSelector(".btn_inventory, .cart_button");
     private final By linkImage = By.cssSelector("a[id*='_img_link']");
     private final By linkTitle = By.cssSelector("a[id*='_title_link']");
-
+    private final By quantity = By.className("cart_quantity");
 
     public WebElement getImage(){
         return container.findElement(image);
@@ -40,6 +40,8 @@ public class CItem {
     public WebElement getLinkImageElement() {
         return container.findElement(linkImage);
     }
+    public WebElement getQuantity(){ return container.findElement(quantity);}
+
 
     public String getTitleText(){
         return getTitle().getText();
@@ -75,4 +77,9 @@ public class CItem {
     public String getAddRemoveButtonText(){
         return getAddRemoveButton().getText();
     }
+    public String getQuantityText(){
+        return getQuantity().getText().trim();
+    }
+    public int getQuantityValue() { return Integer.parseInt(getQuantityText());}
+    public void clickOnAddRemoveButton(){ getAddRemoveButton().click();}
 }

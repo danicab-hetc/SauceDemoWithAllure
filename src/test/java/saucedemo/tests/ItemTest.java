@@ -31,7 +31,7 @@ public class ItemTest extends BaseTest {
     //===================================================
 
     @Test(
-        description = "When user clicks on add button then cart icon is updated and same item button on home page is updated as well as cart icon"
+        description = "When user clicks on add button then button name changes to remove, cart icon is updated and same item button on home page is updated as well as cart icon"
     )
     public void testAddToCart(){
         itemPage.clickOnAddButton();
@@ -49,8 +49,10 @@ public class ItemTest extends BaseTest {
                 .cartIconNumberIsValid(1);
     }
 
+    //===================================================
+
     @Test(
-            description = "When user clicks on remove button then cart icon is updated and same item button on home page is updated as well as cart icon"
+            description = "When user clicks on remove button then button changes name to add, cart icon is updated and same item button on home page is updated as well as cart icon"
     )
     public void testRemoveFromCart(){
         itemPage.clickOnAddButton();
@@ -70,3 +72,4 @@ public class ItemTest extends BaseTest {
                 .cartIconNumberIsValid(0);
     }
 }
+

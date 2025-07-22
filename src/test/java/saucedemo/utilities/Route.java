@@ -6,6 +6,6 @@ public class Route {
     public static final String BASE_URL = "https://www.saucedemo.com";
     public static final String LOGIN = "/";
     public static final String HOME = "/inventory.html";
-    public static final String CART = "";
+    public static final String CART = "/cart.html";
     public static final String ITEM = "/inventory-item.html?id=";
 }

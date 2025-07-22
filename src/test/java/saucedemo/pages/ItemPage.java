@@ -59,10 +59,10 @@ public class ItemPage extends BasePage {
         return getDescription().getText().trim();
     }
     public String getPriceText(){
-        return getPrice().getText().substring(1);
+        return getPrice().getText();
     }
     public double getPriceValue(){
-        return Double.parseDouble(getPriceText());
+        return Double.parseDouble(getPriceText().substring(1));
     }
     public String getImageSrc(){
         return getImage().getAttribute("src");
