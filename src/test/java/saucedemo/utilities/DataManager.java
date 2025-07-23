@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import saucedemo.dto.CheckoutFormDto;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -69,6 +70,14 @@ public class DataManager {
         return new Object[][] {
                 {"title"},
                 {"image"}
+        };
+    }
+
+    public static Object[][] getInvalidForm() {
+        return new Object[][] {
+                {new CheckoutFormDto("","",""),"Error: First Name is required"},
+                {new CheckoutFormDto("Danica", "", ""), "Error: Last Name is required"},
+                {new CheckoutFormDto("Danica", "Bijeljanin", ""), "Error: Postal Code is required"}
         };
     }
 }

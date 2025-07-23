@@ -50,10 +50,10 @@ public class CartPage extends BasePage {
         return new HomePage(driver);
     }
 
-    public void clickOnCheckoutButton() {           //IZMENITI
+    public CheckoutStepOnePage clickOnCheckoutButton() {
         getCheckoutButton().click();
-        return;
-    } //            Izmeniti
+        return new CheckoutStepOnePage(driver);
+    }
 
     public boolean isEmpty() {
         return driver.findElements(cartItem).isEmpty();
