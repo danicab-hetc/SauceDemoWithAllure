@@ -51,7 +51,7 @@ public class LoginTest extends BaseTest {
             dataProvider = "invalidUsers"
     )
     public void testUnsuccessfulUserLogin(UserLoginDto user) {
-        loginPage.login(user.getUsername(), user.getPassword());
+        loginPage.invalidLogin(user.getUsername(), user.getPassword());
         loginPage.assertThat()
                 .userIsOnLoginPage()
                 .loginButtonIsVisible()

@@ -19,8 +19,7 @@ public class CheckoutStepTwoPage extends BasePage {
         super.url += Route.CHECKOUT_STEP_TWO;
     }
     @Override
-    public void waitForPageToLoad() {   //dopisati
-
+    public void waitForPageToLoad() {   getFinishButton();
     }
     public CheckoutStepTwoAssert assertThat(){
         return new CheckoutStepTwoAssert(driver, this);
@@ -54,9 +53,25 @@ public class CheckoutStepTwoPage extends BasePage {
         return wait.until(ExpectedConditions.elementToBeClickable(finishButton));
     }
 
-    public Double getTotalItemValue(){
+    public double getTaxValue() {
+        String tax = getTax().getText().split("\\$")[1];
+        return Double.parseDouble(tax.trim());
+    }
+    public double getTotalValue() {
+        String total = getTotal().getText().split("\\$")[1];
+        return Double.parseDouble(total.trim());
+    }
+    public double getTotalItemValue(){
         String totalItemValueString = getItemTotal().getText().split("\\$")[1];
-        return Double.parseDouble(totalItemValueString);
+        return Double.parseDouble(totalItemValueString.trim());
+    }
+    public double getTotalItemsSum() {
+        return getItems().stream().mapToDouble(item -> item.getPriceValue()).sum();
     }
 
+
+    public HomePage clickOnCancelButton() {
+        getCancelButton().click();
+        return new HomePage(driver);
+    }
 }

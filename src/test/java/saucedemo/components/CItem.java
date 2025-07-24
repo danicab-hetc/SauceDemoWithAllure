@@ -2,6 +2,7 @@ package saucedemo.components;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import saucedemo.pages.ItemPage;
 
 public class CItem {
     private final WebElement container;
@@ -82,4 +83,8 @@ public class CItem {
     }
     public int getQuantityValue() { return Integer.parseInt(getQuantityText());}
     public void clickOnAddRemoveButton(){ getAddRemoveButton().click();}
+//    public ItemPage clickOnTitle() {
+//        getTitle().click();
+//        return new ItemPage(driver)
+//    }
 }

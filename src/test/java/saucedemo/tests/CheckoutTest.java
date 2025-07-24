@@ -1,10 +1,10 @@
 package saucedemo.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
+import saucedemo.components.CItem;
 import saucedemo.dto.CheckoutFormDto;
 import saucedemo.dto.ItemDto;
 import saucedemo.pages.*;
@@ -26,6 +26,9 @@ public class CheckoutTest extends BaseTest {
         homePage.getMenu().clickOnResetButtonAndRefresh();
         homePage.waitForPageToLoad();
     }
+
+    //===================================================
+
     @Test(
             description = "When user goes to the Checkout step one page then number of items displayed on the cart icon is valid",
             dataProvider = "itemQuantity",
@@ -43,6 +46,7 @@ public class CheckoutTest extends BaseTest {
         checkoutStepOnePage.assertThat().numberOfAddedItemsDisplayedOnTheCartIconIsValid(addedItems.size());
     }
 
+    //===================================================
 
     @Test(
             description = "When user inputs valid information into every form field and clicks on continue button then is redirected to checkout step two page ",
@@ -67,6 +71,8 @@ public class CheckoutTest extends BaseTest {
         );
         checkoutStepTwoPage.assertThat().userIsOnCheckoutStepTwoPage();
     }
+
+    //===================================================
 
     @DataProvider(name = "invalidForm")
     public Object[][] getInvalidForm() {
@@ -93,8 +99,10 @@ public class CheckoutTest extends BaseTest {
                 .userIsOnCheckoutStepOnePage();
     }
 
+    //===================================================
+
     @Test(
-            description = "When user clicks on cancel button on the checkout step one page then is redirected to cart page and all saved datas are valid. ",
+            description = "When user clicks on cancel button on the checkout step one page then is redirected to cart page and all saved data are valid. ",
             dataProvider = "itemQuantity",
             dataProviderClass = HomeTest.class
     )
@@ -116,11 +124,10 @@ public class CheckoutTest extends BaseTest {
                 .allAddedItemsContentIsValid(addedItems);
     }
 
-
-    //===================================================================================
+    //=================================================== checkout step TWO
 
     @Test(
-            description = "When user adds items in cart ang go to checkout step two page, then all items have valid informations.",
+            description = "When user adds items in cart and goes to checkout step two page, then all added items are present on checkout step two page.",
             dataProvider = "itemQuantity",
             dataProviderClass = HomeTest.class
     )
@@ -132,7 +139,92 @@ public class CheckoutTest extends BaseTest {
         cartPage.waitForPageToLoad();
         checkoutStepOnePage = cartPage.clickOnCheckoutButton();
         checkoutStepOnePage.waitForPageToLoad();
-        checkoutStepOnePage.clickOnContinueButton();
+        checkoutStepTwoPage = checkoutStepOnePage.fillInTheFormAndContinue("Danica", "Bijeljanin", "11000");
+
+        checkoutStepTwoPage.waitForPageToLoad();
+
+        checkoutStepTwoPage.assertThat()
+                        .userIsOnCheckoutStepTwoPage()
+                        .allAddedItemsArePresent(quantity)
+                        .allAddedItemsHaveValidInformations(addedItems);
+
     }
+
+    //===================================================
+
+    @Test(
+            description = "When user adds items in cart and goes to checkout step two page, then total price is valid.",
+            dataProvider = "itemQuantity",
+            dataProviderClass = HomeTest.class
+    )
+    public void testValidTotalPrice(String quantityItem){
+        int quantity = (quantityItem.equals("one")) ? 1 : homePage.getProducts().size();
+
+        homePage.addItemsToCart(quantity);
+        cartPage = homePage.getMenu().clickOnCartIcon();
+        cartPage.waitForPageToLoad();
+        checkoutStepOnePage = cartPage.clickOnCheckoutButton();
+        checkoutStepOnePage.waitForPageToLoad();
+        checkoutStepTwoPage = checkoutStepOnePage.fillInTheFormAndContinue("Danica", "Bijeljanin", "11000");
+
+        checkoutStepTwoPage.waitForPageToLoad();
+
+        checkoutStepTwoPage.assertThat()
+                .userIsOnCheckoutStepTwoPage()
+                .itemTotalPriceIsValid()
+                .totalPriceWithTaxIsValid();
+    }
+
+    //===================================================
+
+    @Test(
+            description = "When user is on checkout step two page and clicks cancel button, then is redirected to home page and added items remain added on home page as well as saved on cart page.",
+            dataProvider = "itemQuantity",
+            dataProviderClass = HomeTest.class
+            )
+    public void testSuccessfulReturningToHomePageFromCheckoutStepTwoPage(String quantityItem){
+        int quantity = (quantityItem.equals("one")) ? 1 : homePage.getProducts().size();
+        List<ItemDto> addedItems = homePage.addItemsToCart(quantity);
+        cartPage = homePage.getMenu().clickOnCartIcon();
+        cartPage.waitForPageToLoad();
+        checkoutStepOnePage = cartPage.clickOnCheckoutButton();
+        checkoutStepOnePage.waitForPageToLoad();
+        checkoutStepTwoPage = checkoutStepOnePage.fillInTheFormAndContinue("Danica", "Bijeljanin", "11000");
+        checkoutStepTwoPage.waitForPageToLoad();
+
+        homePage = checkoutStepTwoPage.clickOnCancelButton();
+        homePage.waitForPageToLoad();
+        homePage.assertThat().userIsOnHomePage()
+                .cartIconNumberIsValid(quantity)
+                .validItemsButtonsHaveTextRemove(addedItems);
+
+        cartPage = homePage.getMenu().clickOnCartIcon();
+        cartPage.waitForPageToLoad();
+        cartPage.assertThat().userIsOnCartPage()
+                .cartIconNumberIsValid(quantity)
+                .allAddedItemsContentIsValid(addedItems);
+    }
+
+    @Test(
+            description = "When user clicks on any item title, then they are redirected to the item page.",
+            dataProvider = "itemQuantity",
+            dataProviderClass = HomeTest.class
+        )
+    public void testValidLinksToItemPages(String quantityItem){
+        int quantity = (quantityItem.equals("one")) ? 1 : homePage.getProducts().size();
+        List<ItemDto> addedItems = homePage.addItemsToCart(quantity);
+        cartPage = homePage.getMenu().clickOnCartIcon();
+        cartPage.waitForPageToLoad();
+        checkoutStepOnePage = cartPage.clickOnCheckoutButton();
+        checkoutStepOnePage.waitForPageToLoad();
+        checkoutStepTwoPage = checkoutStepOnePage.fillInTheFormAndContinue("Danica", "Bijeljanin", "11000");
+        checkoutStepTwoPage.waitForPageToLoad();
+
+        checkoutStepTwoPage.assertThat()
+                .userIsOnCheckoutStepTwoPage()
+                .allItemsTitlesLeadToItemPages();
+    }
+
+
 
 }

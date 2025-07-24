@@ -4,8 +4,10 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 import saucedemo.components.CItem;
+import saucedemo.dto.ItemDto;
 import saucedemo.pages.HomePage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeAssert {
@@ -88,6 +90,27 @@ public class HomeAssert {
             softAssert.assertEquals(price.split("\\.")[1].length(), 2, "Price doesn't have 2 digits after the dot " + item.getIdByTitle());
         }
         softAssert.assertAll("Not all items have valid price format.");
+        return this;
+    }
+
+    public HomeAssert validItemsButtonsHaveTextRemove(List<ItemDto> addedItems) {
+        List<CItem> itemsWithRemoveButton = new ArrayList<>();
+
+        for (int i = 0; i < homePage.getProducts().size(); i++) {
+            if(homePage.getProducts().get(i).getAddRemoveButtonText().equalsIgnoreCase("remove")){
+                itemsWithRemoveButton.add(homePage.getProducts().get(i));
+            }
+        }
+        Assert.assertEquals(itemsWithRemoveButton.size(), addedItems.size());
+
+        SoftAssert softAssert = new SoftAssert();
+        for (int i = 0; i < itemsWithRemoveButton.size(); i++) {
+            softAssert.assertEquals(itemsWithRemoveButton.get(i).getIdByTitle(), addedItems.get(i).id());
+            softAssert.assertEquals(itemsWithRemoveButton.get(i).getTitleText(), addedItems.get(i).title());
+            softAssert.assertEquals(itemsWithRemoveButton.get(i).getDescriptionText(), addedItems.get(i).description());
+            softAssert.assertEquals(itemsWithRemoveButton.get(i).getPriceText(), addedItems.get(i).price());
+        }
+        softAssert.assertAll("Not all items on home page have remove button as should have");
         return this;
     }
 }

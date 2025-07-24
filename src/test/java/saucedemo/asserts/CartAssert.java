@@ -55,4 +55,17 @@ public class CartAssert {
         Assert.assertEquals(actualQuantity, quantity, "Cart icon number is not valid");
         return this;
     }
+
+    public CartAssert addedItemsRemainSavedInCart(List<ItemDto> addedItems) {
+        List<CItem> itemsInCart = cartPage.getItems();
+        SoftAssert softAssert = new SoftAssert();
+        for (int i = 0; i < itemsInCart.size(); i++) {
+            softAssert.assertEquals(itemsInCart.get(i).getIdByTitle(), addedItems.get(i).id());
+            softAssert.assertEquals(itemsInCart.get(i).getTitleText(), addedItems.get(i).title());
+            softAssert.assertEquals(itemsInCart.get(i).getDescriptionText(), addedItems.get(i).description());
+            softAssert.assertEquals(itemsInCart.get(i).getPriceText() , addedItems.get(i).price());
+        }
+        softAssert.assertAll("Not all added items remain saved in cart!");
+        return this;
+    }
 }

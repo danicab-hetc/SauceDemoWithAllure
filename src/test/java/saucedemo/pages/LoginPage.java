@@ -63,7 +63,18 @@ public class LoginPage extends BasePage {
         enterUsername(username);
         enterPassword(password);
         clickOnLoginButton();
-        return new HomePage(driver);
+
+        HomePage homePage = new HomePage(driver);
+        homePage.waitForPageToLoad();
+        return homePage;
+    }
+
+    public LoginPage invalidLogin(String username, String password){
+        enterUsername(username);
+        enterPassword(password);
+        clickOnLoginButton();
+        this.waitForPageToLoad();
+        return this;
     }
 
     public String getErrorMessage(){

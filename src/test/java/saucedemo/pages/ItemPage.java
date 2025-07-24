@@ -17,7 +17,7 @@ public class ItemPage extends BasePage {
 
     @Override
     public void waitForPageToLoad() {
-        getAddButton();
+        getPrice();
     }
 
     public ItemAssert assertThat() {
@@ -87,5 +87,6 @@ public class ItemPage extends BasePage {
         getBackToProducts().click();
         return new HomePage(driver);
     }
+
 
 }
