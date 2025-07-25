@@ -24,7 +24,7 @@ public class CheckoutStepOneAssert {
         return this;
     }
 
-    public CheckoutStepOneAssert numberOfAddedItemsDisplayedOnTheCartIconIsValid(int expectedNumber) {
+    public CheckoutStepOneAssert cartIconNumberIsValid(int expectedNumber) {
         Assert.assertEquals(checkoutStepOnePage.getMenu().getCartIcon().getText(), String.valueOf(expectedNumber));
         return this;
     }

@@ -1,14 +1,12 @@
 package saucedemo.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
-import saucedemo.components.CItem;
-import saucedemo.dto.ItemDto;
+import saucedemo.data.DataProviders;
+import saucedemo.data.ItemDto;
 import saucedemo.pages.CartPage;
 import saucedemo.pages.HomePage;
-import saucedemo.pages.LoginPage;
 
 import java.util.List;
 
@@ -18,11 +16,22 @@ public class CartTest extends BaseTest {
 
     @BeforeMethod
     public void cartPageMethodSetup() {
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.navigateTo();
-        homePage = loginPage.login("standard_user", "secret_sauce");
-        homePage.getMenu().clickOnResetButtonAndRefresh();
-        homePage.waitForPageToLoad();
+        homePage = new HomePage(driver);
+        homePage.navigateToWithCookie();
+        homePage.resetAndRefresh();
+        cartPage = new CartPage(driver);
+    }
+
+    //===================================================
+
+    @Test(description = "When user goes to cart, without previously adding any item, cart is empty.")
+    public void testEmptyCart() {
+        homePage.assertThat().cartIconNumberIsValid(0);
+        homePage.getMenu().openCartPage()
+                .assertThat()
+                .userIsOnCartPage()
+                .itemsListIsEmpty()
+                .cartIconNumberIsValid(0);
     }
 
     //===================================================
@@ -30,17 +39,14 @@ public class CartTest extends BaseTest {
     @Test(
             description = "When user adds items from home page, then cart page contains only added items",
             dataProvider = "itemQuantity",
-            dataProviderClass = HomeTest.class
+            dataProviderClass = DataProviders.class
     )
-    public void testSuccessfullyAddingItemsToCartFromHomePage(String quantityItem) {
-        int quantity = (quantityItem.equals("one")) ? 1 : homePage.getProducts().size();
-
+    public void testSuccessfullyAddingItemsToCartFromHomePage(int quantity) {
         List<ItemDto> addedItems = homePage.addItemsToCart(quantity);
         homePage.assertThat().cartIconNumberIsValid(quantity);
 
-        cartPage = homePage.getMenu().clickOnCartIcon();
-        cartPage.waitForPageToLoad();
-        cartPage.assertThat()
+        homePage.getMenu().openCartPage()
+                .assertThat()
                 .userIsOnCartPage()
                 .itemsNumberIsValid(quantity)
                 .cartIconNumberIsValid(quantity)
@@ -49,38 +55,22 @@ public class CartTest extends BaseTest {
 
     //===================================================
 
-    @Test(description = "When user goes to cart, without previously adding any item, cart is empty.")
-    public void testEmptyCart() {
-        homePage.assertThat().cartIconNumberIsValid(0);
-        cartPage = homePage.getMenu().clickOnCartIcon();
-        cartPage.waitForPageToLoad();
-        cartPage.assertThat()
-                .userIsOnCartPage()
-                .itemsListIsEmpty()
-                .cartIconNumberIsValid(0);
-    }
-
-    //===================================================
-
     @Test(
-            description = "Clicking on remove buttons remove items from cart",
+            description = "Clicking on remove buttons, removes items from cart",
             dataProvider = "itemQuantity",
-            dataProviderClass = HomeTest.class
+            dataProviderClass = DataProviders.class
     )
-    public void testRemovingItems(String quantityItem) {
-        int quantity = (quantityItem.equals("one")) ? 1 : homePage.getProducts().size();
-
+    public void testRemovingItems(int quantity) {
         homePage.addItemsToCart(quantity);
-        cartPage = homePage.getMenu().clickOnCartIcon();
-        cartPage.waitForPageToLoad();
 
-        cartPage.removeAllItems();
-        cartPage.assertThat()
+        homePage.getMenu().openCartPage()
+                .removeAllItems()
+                .assertThat()
                 .itemsListIsEmpty()
                 .cartIconNumberIsValid(0);
 
-        homePage = cartPage.clickOnContinueShoppingButton();
-        homePage.assertThat()
+        cartPage.clickOnContinueShoppingButton()
+                .assertThat()
                 .userIsOnHomePage()
                 .cartIconNumberIsValid(0)
                 .buttonChangeNameTo("Add to cart", homePage.getProducts());

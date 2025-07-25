@@ -74,18 +74,22 @@ public class ItemPage extends BasePage {
         return getRemoveButton().getText().trim();
     }
 
-    public void clickOnAddButton(){
+    public ItemPage clickOnAddButton(){
         getAddButton().click();
+        return this;
     }
-    public void clickOnRemoveButton(){
+    public ItemPage clickOnRemoveButton(){
         getRemoveButton().click();
+        return this;
     }
     public String getId(){
         return driver.getCurrentUrl().split("=")[1];
     }
     public HomePage clickOnBackToProductsButton(){
         getBackToProducts().click();
-        return new HomePage(driver);
+        HomePage homePage = new HomePage(driver);
+        homePage.waitForPageToLoad();
+        return homePage;
     }
 
 

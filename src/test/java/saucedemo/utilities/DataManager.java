@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import saucedemo.dto.CheckoutFormDto;
+import saucedemo.data.CheckoutFormDto;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -61,8 +61,9 @@ public class DataManager {
     }
     public static Object[][] getQuantity(){
         return new Object[][]{
-                {"one"},
-                {"all"}
+//                {1},
+//                {3},
+                {6}
         };
     }
 

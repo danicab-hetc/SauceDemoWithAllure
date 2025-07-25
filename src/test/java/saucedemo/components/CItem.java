@@ -2,6 +2,7 @@ package saucedemo.components;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import saucedemo.data.ItemDto;
 import saucedemo.pages.ItemPage;
 
 public class CItem {
@@ -83,8 +84,26 @@ public class CItem {
     }
     public int getQuantityValue() { return Integer.parseInt(getQuantityText());}
     public void clickOnAddRemoveButton(){ getAddRemoveButton().click();}
-//    public ItemPage clickOnTitle() {
-//        getTitle().click();
-//        return new ItemPage(driver)
-//    }
+
+    public ItemDto toItemDto(String titleOrImage) {
+        return new ItemDto(
+                this.getIdBy(titleOrImage),
+                this.getImageSrc(),
+                this.getTitleText(),
+                this.getDescriptionText(),
+                this.getPriceText(),
+                this.getAddRemoveButtonText()
+        );
+    }
+    public ItemDto stepTwoToItemDto() {
+        return new ItemDto(
+                this.getIdByTitle(),
+                "",
+                this.getTitleText(),
+                this.getDescriptionText(),
+                this.getPriceText(),
+                ""
+        );
+    }
+
 }

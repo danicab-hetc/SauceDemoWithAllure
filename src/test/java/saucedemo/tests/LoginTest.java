@@ -1,12 +1,11 @@
 package saucedemo.tests;
 
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
-import saucedemo.dto.UserLoginDto;
-import saucedemo.pages.HomePage;
+import saucedemo.data.DataProviders;
+import saucedemo.data.UserLoginDto;
 import saucedemo.pages.LoginPage;
 import saucedemo.utilities.DataManager;
 
@@ -21,41 +20,31 @@ public class LoginTest extends BaseTest {
 
     //===================================================
 
-    @DataProvider(name = "validUsers")
-    public Object[][] getValidUsers() {
-        return DataManager.excelToDataProvider(
-            "validUsers.xlsx", "Sheet1", UserLoginDto.class
-        );
-    }
     @Test(
             description = "Verify that when user inputs valid credentials is logged in and redirected to the home page.",
-            dataProvider = "validUsers"
+            dataProvider = "validUsers",
+            dataProviderClass = DataProviders.class
     )
     public void testSuccessfulUserLogin(UserLoginDto user) {
-        HomePage homePage = loginPage.login(user.getUsername(), user.getPassword());
-        homePage.assertThat()
-                .userIsOnHomePage()
-                .logOutButtonIsPresent();
+        loginPage.loginWithValidCreds(user.getUsername(), user.getPassword())
+                    .assertThat()
+                    .userIsOnHomePage()
+                    .logOutButtonIsPresent();
     }
 
     //===================================================
 
-    @DataProvider(name = "invalidUsers")
-    public Object[][] getInvalidUsers() {
-        return DataManager.excelToDataProvider(
-                "invalidUsers.xlsx", "Sheet1", UserLoginDto.class
-        );
-    }
     @Test(
             description = "Verify that when user inputs invalid credentials is not logged in and error message appears.",
-            dataProvider = "invalidUsers"
+            dataProvider = "invalidUsers",
+            dataProviderClass = DataProviders.class
     )
     public void testUnsuccessfulUserLogin(UserLoginDto user) {
-        loginPage.invalidLogin(user.getUsername(), user.getPassword());
-        loginPage.assertThat()
-                .userIsOnLoginPage()
-                .loginButtonIsVisible()
-                .errorMessageAppears(user.getMessage());
+        loginPage.loginWithInvalidCreds(user.getUsername(), user.getPassword())
+                    .assertThat()
+                    .userIsOnLoginPage()
+                    .loginButtonIsVisible()
+                    .errorMessageAppears(user.getMessage());
     }
 
     //===================================================

@@ -32,7 +32,7 @@ public class CheckoutStepOnePage extends BasePage {
     private final By errorMessage = By.className("error-message-container");
 
     public WebElement getFirstNameInput(){
-       return wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameInput));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameInput));
     }
     public WebElement getLastNameInput(){
         return wait.until(ExpectedConditions.visibilityOfElementLocated(lastNameInput));
@@ -71,7 +71,10 @@ public class CheckoutStepOnePage extends BasePage {
 
     public CartPage clickOnCancelButton(){
         getCancelButton().click();
-        return new CartPage(driver);
+
+        CartPage cartPage = new CartPage(driver);
+        cartPage.waitForPageToLoad();
+        return cartPage;
     }
     public CheckoutStepTwoPage clickOnContinueButton(){
         getContinueButton().click();
@@ -84,5 +87,4 @@ public class CheckoutStepOnePage extends BasePage {
         enterPostalCode(postalcode);
         return clickOnContinueButton();
     }
-
 }

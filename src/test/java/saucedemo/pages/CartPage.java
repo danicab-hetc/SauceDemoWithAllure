@@ -5,13 +5,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import saucedemo.asserts.CartAssert;
-import saucedemo.asserts.HomeAssert;
 import saucedemo.base.BasePage;
 import saucedemo.components.CItem;
 import saucedemo.utilities.Route;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CartPage extends BasePage {
     public CartPage(WebDriver driver) {
@@ -52,16 +50,20 @@ public class CartPage extends BasePage {
 
     public CheckoutStepOnePage clickOnCheckoutButton() {
         getCheckoutButton().click();
-        return new CheckoutStepOnePage(driver);
+
+        CheckoutStepOnePage checkoutOnePage = new CheckoutStepOnePage(driver);
+        checkoutOnePage.waitForPageToLoad();
+        return checkoutOnePage;
     }
 
     public boolean isEmpty() {
         return driver.findElements(cartItem).isEmpty();
     }
 
-    public void removeAllItems() {
+    public CartPage removeAllItems() {
         for(CItem item: getItems()){
             item.clickOnAddRemoveButton();
         }
+        return this;
     }
 }

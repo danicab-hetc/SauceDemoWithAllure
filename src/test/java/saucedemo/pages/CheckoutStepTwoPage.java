@@ -72,6 +72,9 @@ public class CheckoutStepTwoPage extends BasePage {
 
     public HomePage clickOnCancelButton() {
         getCancelButton().click();
-        return new HomePage(driver);
+
+        HomePage homePage = new HomePage(driver);
+        homePage.waitForPageToLoad();
+        return homePage;
     }
 }

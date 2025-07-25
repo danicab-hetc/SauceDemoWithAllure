@@ -70,8 +70,11 @@ public class CMenu {
         getResetAppStateButton().click();
         driver.navigate().refresh();
     }
-    public CartPage clickOnCartIcon() {
+    public CartPage openCartPage() {
         getCartIcon().click();
-        return new CartPage(driver);
+
+        CartPage cartPage = new CartPage(driver);
+        cartPage.waitForPageToLoad();
+        return cartPage;
     }
 }

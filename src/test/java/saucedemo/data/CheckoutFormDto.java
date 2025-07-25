@@ -1,4 +1,4 @@
-package saucedemo.dto;
+package saucedemo.data;
 
 public record CheckoutFormDto(String firstName, String lastName, String postalCode) {
 }

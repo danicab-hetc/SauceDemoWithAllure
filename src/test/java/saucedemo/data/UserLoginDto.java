@@ -1,4 +1,4 @@
-package saucedemo.dto;
+package saucedemo.data;
 
 public class UserLoginDto {
     private String username;

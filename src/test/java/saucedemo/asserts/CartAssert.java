@@ -4,9 +4,8 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 import saucedemo.components.CItem;
-import saucedemo.dto.ItemDto;
+import saucedemo.data.ItemDto;
 import saucedemo.pages.CartPage;
-import saucedemo.pages.HomePage;
 
 import java.util.List;
 

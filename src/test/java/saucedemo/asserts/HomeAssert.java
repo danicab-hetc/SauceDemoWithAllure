@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 import saucedemo.components.CItem;
-import saucedemo.dto.ItemDto;
+import saucedemo.data.ItemDto;
 import saucedemo.pages.HomePage;
 
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class HomeAssert {
         return this;
     }
 
-    public HomeAssert validItemsButtonsHaveTextRemove(List<ItemDto> addedItems) {
+    public HomeAssert addedItemsHaveRemoveButtons(List<ItemDto> addedItems) {
         List<CItem> itemsWithRemoveButton = new ArrayList<>();
 
         for (int i = 0; i < homePage.getProducts().size(); i++) {

@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 import saucedemo.components.CItem;
-import saucedemo.dto.ItemDto;
+import saucedemo.data.ItemDto;
 import saucedemo.pages.*;
 
 import java.util.List;
@@ -56,33 +56,30 @@ public class CheckoutStepTwoAssert {
 
     public CheckoutStepTwoAssert allItemsTitlesLeadToItemPages() {
         List<CItem> items = checkoutStepTwoPage.getItems();
-        List<ItemDto> itemsInfo =
-        items.stream().map(item -> new ItemDto(item.getIdByTitle(), "", item.getTitleText(), item.getDescriptionText(), item.getPriceText(), "")).toList();
+        List<ItemDto> itemsDto = items.stream()
+                .map(item -> item.stepTwoToItemDto()).toList();
 
-        for (int i = 0; i < itemsInfo.size(); i++) {
+        for (int i = 0; i < itemsDto.size(); i++) {
+            items = checkoutStepTwoPage.getItems();
             items.get(i).getTitle().click();
             ItemPage itemPage = new ItemPage(driver);
             itemPage.waitForPageToLoad();
 
-            Assert.assertEquals(driver.getCurrentUrl(), itemPage.getUrl() + itemPage.getId());
-            Assert.assertEquals(itemPage.getId(), itemsInfo.get(i).id());
-            Assert.assertEquals(itemPage.getTitleText(), itemsInfo.get(i).title());
-            Assert.assertEquals(itemPage.getDescriptionText(), itemsInfo.get(i).description());
-            Assert.assertEquals(itemPage.getPriceText(), itemsInfo.get(i).price());
+            SoftAssert softAssert = new SoftAssert();
+            softAssert.assertEquals(driver.getCurrentUrl(), itemPage.getUrl() + itemPage.getId());
+            softAssert.assertEquals(itemPage.getId(), itemsDto.get(i).id());
+            softAssert.assertEquals(itemPage.getTitleText(), itemsDto.get(i).title());
+            softAssert.assertEquals(itemPage.getDescriptionText(), itemsDto.get(i).description());
+            softAssert.assertEquals(itemPage.getPriceText(), itemsDto.get(i).price());
+            softAssert.assertAll("Invalid data on the item page");
 
-            CartPage cartPage = itemPage.getMenu().clickOnCartIcon();
-            cartPage.waitForPageToLoad();
-            CheckoutStepOnePage checkoutStepOnePage = cartPage.clickOnCheckoutButton();
-            checkoutStepOnePage.waitForPageToLoad();
-            checkoutStepTwoPage = checkoutStepOnePage.fillInTheFormAndContinue("Danica", "Bijeljanin", "11000");
-            checkoutStepTwoPage.waitForPageToLoad();
-
+            checkoutStepTwoPage.navigateTo();
             checkoutStepTwoPage.assertThat().userIsOnCheckoutStepTwoPage();
-            items = checkoutStepTwoPage.getItems();
         }
-
         return this;
-
-
+    }
+    public CheckoutStepTwoAssert cartIconNumberIsValid(int expectedNumber) {
+        Assert.assertEquals(checkoutStepTwoPage.getMenu().getCartIcon().getText(), String.valueOf(expectedNumber));
+        return this;
     }
 }

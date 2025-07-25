@@ -1,16 +1,13 @@
 package saucedemo.tests;
 
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
 import saucedemo.components.CItem;
-import saucedemo.dto.ItemDto;
+import saucedemo.data.DataProviders;
+import saucedemo.data.ItemDto;
 import saucedemo.pages.HomePage;
 import saucedemo.pages.ItemPage;
-import saucedemo.pages.LoginPage;
-import saucedemo.utilities.DataManager;
 
 import java.util.List;
 
@@ -19,45 +16,36 @@ public class HomeTest extends BaseTest {
 
     @BeforeMethod
     public void homePageMethodSetup(){
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.navigateTo();
-        homePage = loginPage.login("standard_user", "secret_sauce");
-        homePage.getMenu().clickOnResetButtonAndRefresh();
-        homePage.waitForPageToLoad();
+        homePage = new HomePage(driver);
+        homePage.navigateToWithCookie();
+        homePage.resetAndRefresh();
     }
 
     //===================================================
 
-    @DataProvider(name = "sortOptions")
-    public Object[][] getOptions(){
-        return DataManager.getSortOptions();
-    }
     @Test(
         description = "When user applies any of the sort options, then items sort properly",
-        dataProvider = "sortOptions"
+        dataProvider = "sortOptions",
+        dataProviderClass = DataProviders.class
     )
     public void testSortBy(String sortName){
-        homePage.sortProductBy(sortName);
-        homePage.assertThat().itemsAreSortedBySortName(sortName);
+        homePage.sortProductBy(sortName)
+                .assertThat()
+                .itemsAreSortedBySortName(sortName);
     }
 
     //===================================================
 
-    @DataProvider(name = "itemQuantity")
-    public Object[][] getItemQuantity(){
-        return DataManager.getQuantity();
-    }
     @Test(
         description = "When user clicks on item addRemoveButton, its name is changed to opposite",
-        dataProvider = "itemQuantity"
+        dataProvider = "itemQuantity",
+        dataProviderClass = DataProviders.class
     )
-    public void testClickingOnItemButton(String quantityType){
-        int quantity = (quantityType.equals("one")) ? 1 : homePage.getProducts().size();
-
+    public void testClickingOnItemButton(int quantity){
         List<CItem> items = homePage.clickOnAddToCartButtons(quantity);
         homePage.assertThat().buttonChangeNameTo("Remove", items);
 
-        items = homePage.clickOnAddToCartButtons(quantity);
+        items = homePage.clickOnRemoveFromCartButtons(quantity);
         homePage.assertThat().buttonChangeNameTo("Add to cart", items);
     }
 
@@ -65,11 +53,10 @@ public class HomeTest extends BaseTest {
 
     @Test(
         description = "When user clicks on add to cart buttons then cart icon updates!",
-        dataProvider = "itemQuantity"
+        dataProvider = "itemQuantity",
+        dataProviderClass = DataProviders.class
     )
-    public void testAddToCartIcon(String quantityType){
-        int quantity = (quantityType.equals("one")) ? 1 : homePage.getProducts().size();
-
+    public void testAddToCartIcon(int quantity){
         homePage.clickOnAddToCartButtons(quantity);
         homePage.assertThat().cartIconNumberIsValid(quantity);
     }
@@ -78,15 +65,13 @@ public class HomeTest extends BaseTest {
 
     @Test(
         description = "When user clicks on remove button then cart icon updates!",
-        dataProvider = "itemQuantity"
+        dataProvider = "itemQuantity",
+        dataProviderClass = DataProviders.class
     )
-    public void testRemoveFromCartIcon(String quantityType){
-        int quantity = (quantityType.equals("one")) ? 1 : homePage.getProducts().size();
-
+    public void testRemoveFromCartIcon(int quantity){
         homePage.clickOnAddToCartButtons(quantity);
         homePage.clickOnRemoveFromCartButtons(quantity);
         homePage.assertThat().cartIconNumberIsValid(0);
-
     }
 
     //===================================================
@@ -98,28 +83,18 @@ public class HomeTest extends BaseTest {
 
     //===================================================
 
-    @DataProvider(name = "itemClick")
-    public Object[][] getItemClick() {
-        return DataManager.getItemClick();
-    }
+
     @Test(
             description = "When user clicks on item image/title then user is redirected to the item page and all data is valid",
-            dataProvider = "itemClick"
+            dataProvider = "itemClick",
+            dataProviderClass = DataProviders.class
     )
     public void testRedirectToItemPages(String titleOrImage){
         for (int i = 0; i < homePage.getProducts().size(); i++){
-            CItem item = homePage.getProducts().get(i);
-            ItemDto expected = new ItemDto(
-                    item.getIdBy(titleOrImage),
-                    item.getImageSrc(),
-                    item.getTitleText(),
-                    item.getDescriptionText(),
-                    item.getPriceText(),
-                    item.getAddRemoveButtonText()
-            );
+            CItem citem = homePage.getProducts().get(i);
+            ItemDto expected = citem.toItemDto(titleOrImage);
 
-            ItemPage itemPage = homePage.clickOnItem(titleOrImage, item);
-            itemPage.waitForPageToLoad();
+            ItemPage itemPage = homePage.goToItemPageByClicking(titleOrImage, citem);
             itemPage.assertThat()
                     .itemTitleIsSame(expected.title())
                     .itemDescriptionIsSame(expected.description())
@@ -128,10 +103,10 @@ public class HomeTest extends BaseTest {
                     .itemAddRemoveButtonIsSame(expected.buttonText())
                     .itemUrlIsSame(itemPage.getUrl() + expected.id());
 
-            itemPage.clickOnBackToProductsButton();
-            homePage.waitForPageToLoad();
+            itemPage.clickOnBackToProductsButton()
+                    .assertThat()
+                    .userIsOnHomePage();
         }
-
     }
 
     //===================================================

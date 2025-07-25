@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.Select;
 import saucedemo.asserts.HomeAssert;
 import saucedemo.base.BasePage;
 import saucedemo.components.CItem;
-import saucedemo.dto.ItemDto;
+import saucedemo.data.ItemDto;
 import saucedemo.utilities.Route;
 
 import java.util.ArrayList;
@@ -41,9 +41,10 @@ public class HomePage extends BasePage {
         List<WebElement> items = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(product));
         return items.stream().map(item -> new CItem(item)).toList();
     }
-    public void sortProductBy(String name){
+    public HomePage sortProductBy(String name){
         Select select = new Select(getProductSort());
         select.selectByVisibleText(name);
+        return this;
     }
 
     public boolean isSortedAZ() {
@@ -103,15 +104,21 @@ public class HomePage extends BasePage {
 
     public ItemPage clickOnItemTitle(CItem item) {
         item.getLinkTitleElement().click();
-        return new ItemPage(driver);
+
+        ItemPage itemPage = new ItemPage(driver);
+        itemPage.waitForPageToLoad();
+        return itemPage;
     }
 
     public ItemPage clickOnItemImage(CItem item) {
         item.getLinkImageElement().click();
-        return new ItemPage(driver);
+
+        ItemPage itemPage = new ItemPage(driver);
+        itemPage.waitForPageToLoad();
+        return itemPage;
     }
 
-    public ItemPage clickOnItem(String linkClick, CItem item) {
+    public ItemPage goToItemPageByClicking(String linkClick, CItem item) {
         switch(linkClick) {
             case "title" -> clickOnItemTitle(item);
             case "image" -> clickOnItemImage(item);
@@ -138,5 +145,11 @@ public class HomePage extends BasePage {
             ));
         }
         return result;
+    }
+
+    public HomePage resetAndRefresh() {
+        this.getMenu().clickOnResetButtonAndRefresh();
+        this.waitForPageToLoad();
+        return this;
     }
 }
