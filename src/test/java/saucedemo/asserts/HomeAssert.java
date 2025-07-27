@@ -115,9 +115,11 @@ public class HomeAssert {
     }
 
     public HomeAssert allItemsHaveButtonsWithText(String text) {
+        SoftAssert softAssert = new SoftAssert();
         for (int i = 0; i < homePage.getProducts().size(); i++) {
-            Assert.assertEquals(homePage.getProducts().get(i).getAddRemoveButtonText(), text);
+            softAssert.assertEquals(homePage.getProducts().get(i).getAddRemoveButtonText(), text);
         }
+        softAssert.assertAll("Not all items have " + text + " button");
         return this;
     }
 }

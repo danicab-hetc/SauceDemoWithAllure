@@ -2,20 +2,16 @@ package saucedemo.tests;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import saucedemo.base.BasePage;
 import saucedemo.base.BaseTest;
 import saucedemo.data.DataProviders;
 import saucedemo.data.UserLoginDto;
 import saucedemo.pages.*;
-import saucedemo.utilities.DataManager;
-import saucedemo.utilities.Route;
 
 public class LoginTest extends BaseTest {
     private LoginPage loginPage;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void loginPageMethodSetup() {
         loginPage = new LoginPage(driver);
         loginPage.navigateTo();
@@ -27,7 +23,8 @@ public class LoginTest extends BaseTest {
     @Test(
             description = "Verify that when user inputs valid credentials is logged in and redirected to the home page.",
             dataProvider = "validUsers",
-            dataProviderClass = DataProviders.class
+            dataProviderClass = DataProviders.class,
+            groups = { "smoke" }
     )
     public void testSuccessfulUserLogin(UserLoginDto user) {
         loginPage.loginWithValidCreds(user.getUsername(), user.getPassword())
@@ -63,7 +60,8 @@ public class LoginTest extends BaseTest {
                             "without previously logging in or adding cookie, then" +
                             "they are redirected to the log in page and proper error message appears",
             dataProvider = "PagesUrls",
-            dataProviderClass = DataProviders.class
+            dataProviderClass = DataProviders.class,
+            groups = { "smoke" }
     )
     public void testUnsuccessfulNavigationWithoutPreviouslyLoggingOrAddingCookie(String url) {
         driver.navigate().to(url);

@@ -14,7 +14,7 @@ import java.util.List;
 public class HomeTest extends BaseTest {
     private HomePage homePage;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void homePageMethodSetup(){
         homePage = new HomePage(driver);
         homePage.navigateToWithCookie();
@@ -76,7 +76,28 @@ public class HomeTest extends BaseTest {
 
     //===================================================
 
-    @Test(description = "All items contain data")
+    @Test(
+            description = "When user removes items from home page then those items are removed from cart page",
+            dataProvider = "itemQuantity",
+            dataProviderClass = DataProviders.class,
+            groups = { "smoke" }
+    )
+    public void testRemoveFromCartPage(int quantity){
+        homePage.clickOnAddToCartButtons(quantity);
+        homePage.clickOnRemoveFromCartButtons(quantity);
+        homePage.getMenu().openCartPage()
+                .assertThat()
+                .userIsOnCartPage()
+                .itemsListIsEmpty()
+                .cartIconNumberIsValid(0);
+    }
+
+    //===================================================
+
+    @Test(
+            description = "All items contain data",
+            groups = { "smoke" }
+    )
     public void testAllItemsHaveContent(){
         homePage.assertThat().allItemsHaveContent();
     }
@@ -87,7 +108,8 @@ public class HomeTest extends BaseTest {
     @Test(
             description = "When user clicks on item image/title then user is redirected to the item page and all data is valid",
             dataProvider = "itemClick",
-            dataProviderClass = DataProviders.class
+            dataProviderClass = DataProviders.class,
+            groups = { "smoke" }
     )
     public void testRedirectToItemPages(String titleOrImage){
         for (int i = 0; i < homePage.getProducts().size(); i++){
@@ -111,7 +133,10 @@ public class HomeTest extends BaseTest {
 
     //===================================================
 
-    @Test(description = "All products have valid price format")
+    @Test(
+            description = "All products have valid price format",
+            groups = { "smoke" }
+    )
     public void testValidPriceFormat(){
         homePage.assertThat().allItemsHaveValidPriceFormat();
     }

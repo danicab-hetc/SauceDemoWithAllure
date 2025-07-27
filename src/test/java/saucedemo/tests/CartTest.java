@@ -14,7 +14,7 @@ public class CartTest extends BaseTest {
     private CartPage cartPage;
     private HomePage homePage;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void cartPageMethodSetup() {
         homePage = new HomePage(driver);
         homePage.navigateToWithCookie();
@@ -24,7 +24,10 @@ public class CartTest extends BaseTest {
 
     //===================================================
 
-    @Test(description = "When user goes to cart, without previously adding any item, cart is empty.")
+    @Test(
+            description = "When user goes to cart, without previously adding any item, cart is empty.",
+            groups = { "smoke" }
+    )
     public void testEmptyCart() {
         homePage.assertThat().cartIconNumberIsValid(0);
         homePage.getMenu().openCartPage()
@@ -39,7 +42,8 @@ public class CartTest extends BaseTest {
     @Test(
             description = "When user adds items from home page, then cart page contains only added items",
             dataProvider = "itemQuantity",
-            dataProviderClass = DataProviders.class
+            dataProviderClass = DataProviders.class,
+            groups = { "smoke" }
     )
     public void testSuccessfullyAddingItemsToCartFromHomePage(int quantity) {
         List<ItemDto> addedItems = homePage.addItemsToCart(quantity);
@@ -58,7 +62,8 @@ public class CartTest extends BaseTest {
     @Test(
             description = "Clicking on remove buttons, removes items from cart",
             dataProvider = "itemQuantity",
-            dataProviderClass = DataProviders.class
+            dataProviderClass = DataProviders.class,
+            groups = { "smoke" }
     )
     public void testRemovingItems(int quantity) {
         homePage.addItemsToCart(quantity);

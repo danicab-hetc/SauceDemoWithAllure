@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Test all tests via a package">
-    <test name="Package Test All">
-        <packages>
-            <package name="saucedemo.tests"/>
-        </packages>
-    </test>
-</suite>

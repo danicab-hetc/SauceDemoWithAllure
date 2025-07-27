@@ -17,16 +17,13 @@ public class CheckoutCompleteAssert {
         Assert.assertEquals(driver.getCurrentUrl(), checkoutCompletePage.getUrl(), "User is not on the checkout complete page!");
         return this;
     }
-    public CheckoutCompleteAssert cartIconNumberIs0() {
-        Assert.assertEquals(checkoutCompletePage.getMenu().getCartIcon().getText(), "", "Cart is not empty.");
+
+    public CheckoutCompleteAssert cartIconNumberIsValid(int quantity) {
+        String number = checkoutCompletePage.getMenu().getCartIcon().getText();
+        int actualQuantity = number.isEmpty() ? 0 : Integer.parseInt(number);
+        Assert.assertEquals(actualQuantity, quantity, "Cart icon number is not valid");
         return this;
     }
-
-    public CheckoutCompleteAssert cartIconNumberIs(int quantity) {
-        Assert.assertEquals(checkoutCompletePage.getMenu().getCartIcon().getText(), String.valueOf(quantity));
-        return this;
-    }
-
 
     public CheckoutCompleteAssert messageCheckoutCompleteAppears() {
 

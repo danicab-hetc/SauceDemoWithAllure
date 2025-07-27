@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class DataManager {
+public class ExcelReader {
 
-    public static <T> Object[][] excelToDataProvider(String fileName, String sheetName, Class<T> clazz) {
+    public static <T> Object[][] toDataProvider(String fileName, String sheetName, Class<T> clazz) {
         List<T> list = new ArrayList<>();
         String path = Route.DATA_PATH + fileName;
 
@@ -50,48 +50,4 @@ public class DataManager {
                 .map(item -> new Object[]{item})
                 .toArray(Object[][]::new);
     }
-
-    public static Object[][] getSortOptions() {
-        return new Object[][] {
-                {"Name (A to Z)"},
-                {"Name (Z to A)"},
-                {"Price (low to high)"},
-                {"Price (high to low)"}
-        };
-    }
-    public static Object[][] getQuantity(){
-        return new Object[][]{
-//                {1},
-//                {3},
-                {6}
-        };
-    }
-
-    public static Object[][] getItemClick() {
-        return new Object[][] {
-                {"title"},
-                {"image"}
-        };
-    }
-
-    public static Object[][] getInvalidForm() {
-        return new Object[][] {
-                {new CheckoutFormDto("","",""),"Error: First Name is required"},
-                {new CheckoutFormDto("Danica", "", ""), "Error: Last Name is required"},
-                {new CheckoutFormDto("Danica", "Bijeljanin", ""), "Error: Postal Code is required"}
-        };
-    }
-
-    public static Object[][] getPagesUrls() {
-        return new Object[][]{
-                {Route.BASE_URL + Route.HOME},
-                {Route.BASE_URL + Route.CART},
-                {Route.BASE_URL + Route.CHECKOUT_STEP_ONE},
-                {Route.BASE_URL + Route.CHECKOUT_STEP_TWO},
-                {Route.BASE_URL + Route.CHECKOUT_COMPLETE},
-                {Route.BASE_URL + Route.ITEM}
-        };
-    };
-
-
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Checkout Flow">
+    <test name="Happy Path - Complete Purchase">
+        <classes>
+            <class name="saucedemo.tests.LoginTest">
+                <methods>
+                    <include name="testSuccessfulUserLogin"/>
+                </methods>
+            </class>
+            <class name="saucedemo.tests.HomeTest">
+                <methods>
+                    <include name="testAddToCartIcon"/>
+                </methods>
+            </class>
+            <class name="saucedemo.tests.CartTest">
+                <methods>
+                    <include name="testSuccessfullyAddingItemsToCartFromHomePage"/>
+                </methods>
+            </class>
+            <class name="saucedemo.tests.CheckoutTest">
+                <methods>
+                    <include name="testValidNumberOfAddedItemsDisplayedOnTheCartIcon"/>
+                    <include name="testSuccessfullyRedirectingToCheckoutTwoPage"/>
+                    <include name="testValidItemsContentOnCheckoutStepTwoPage"/>
+                    <include name="testValidTotalPrice"/>
+                    <include name="testSuccessfulCompleteMessageAppearing"/>
+                    <include name="testEmptyCartAfterGoingToCheckoutCompletePage"/>
+                    <include name="testFinishButtonRedirectingToHomePageWithValidInfo"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>
