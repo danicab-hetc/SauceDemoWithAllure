@@ -77,4 +77,13 @@ public class CheckoutStepTwoPage extends BasePage {
         homePage.waitForPageToLoad();
         return homePage;
     }
+
+    public CheckoutCompletePage clickOnFinishButton(){
+        getFinishButton().click();
+        CheckoutCompletePage checkoutCompletePage = new CheckoutCompletePage(driver);
+        checkoutCompletePage.waitForPageToLoad();
+        return checkoutCompletePage;
+    }
+
+
 }

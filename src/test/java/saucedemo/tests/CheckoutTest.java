@@ -11,6 +11,7 @@ import saucedemo.pages.*;
 import java.util.List;
 
 public class CheckoutTest extends BaseTest {
+    private CheckoutCompletePage checkoutCompletePage;
     private CheckoutStepTwoPage checkoutTwoPage;
     private CheckoutStepOnePage checkoutOnePage;
     private CartPage cartPage;
@@ -25,6 +26,7 @@ public class CheckoutTest extends BaseTest {
         cartPage = new CartPage(driver);
         checkoutOnePage = new CheckoutStepOnePage(driver);
         checkoutTwoPage = new CheckoutStepTwoPage(driver);
+        checkoutCompletePage = new CheckoutCompletePage(driver);
     }
 
     //===================================================
@@ -162,6 +164,86 @@ public class CheckoutTest extends BaseTest {
                 .userIsOnCheckoutStepTwoPage()
                 .allItemsTitlesLeadToItemPages();
     }
+    //---------------------- CheckoutCompletePage tests
+    @Test(
+            description =
+                    "When user adds items into the cart and goes to checkout complete page " +
+                    "by clicking finish button on checkout step two page," +
+                    " then message checkout complete appears and cart icon is empty!",
+            dataProvider = "itemQuantity",
+            dataProviderClass = DataProviders.class
+    )
+    public void testSuccessfulCompleteMessageAppearing(int quantity) {
+        homePage.addItemsToCart(quantity);
+        checkoutTwoPage.navigateTo();
+        checkoutTwoPage
+                    .clickOnFinishButton()
+                    .assertThat()
+                    .userIsOnCheckoutCompletePage()
+                    .messageCheckoutCompleteAppears()
+                    .cartIconNumberIs0();
+    }
+
+    @Test(
+            description = "When user adds items into the cart and directly navigate to checkout complete page, then message checkout complete appears and cart icon is not empty!",
+            dataProvider = "itemQuantity",
+            dataProviderClass = DataProviders.class
+    )
+    public void testUnsuccessfulOrderCompletingAfterDirectNavigationToCheckoutCompletePage(int quantity) {
+        homePage.addItemsToCart(quantity);
+
+        checkoutCompletePage.navigateTo();
+        checkoutCompletePage
+                .assertThat()
+                .userIsOnCheckoutCompletePage()
+                .messageCheckoutCompleteAppears()
+                .cartIconNumberIs(quantity);
+
+    }
 
 
+    @Test(
+            description =
+                    "When user adds items into the cart, goes to checkout complete page and open cart page," +
+                    " then cart page is empty!",
+            dataProvider = "itemQuantity",
+            dataProviderClass = DataProviders.class
+    )
+    public void testEmptyCartAfterGoingToCheckoutCompletePage(int quantity) {
+        homePage.addItemsToCart(quantity);
+
+        checkoutTwoPage.navigateTo();
+        checkoutTwoPage
+                .clickOnFinishButton()
+                .assertThat()
+                .userIsOnCheckoutCompletePage();
+
+        cartPage.navigateTo();
+        cartPage.assertThat()
+                .userIsOnCartPage()
+                .cartIconNumberIsValid(0)
+                .itemsListIsEmpty();
+    }
+    @Test(
+            description =
+                    "When user adds items to the cart, goes to checkout complete page and clicks on back home button," +
+                            "then all items on home page have add to cart buttons and cart icon is empty.",
+            dataProvider = "itemQuantity",
+            dataProviderClass = DataProviders.class
+    )
+    public void test(int quantity) {
+        homePage.addItemsToCart(quantity);
+
+        checkoutTwoPage.navigateTo();
+        checkoutTwoPage.clickOnFinishButton();
+
+        checkoutCompletePage.assertThat().userIsOnCheckoutCompletePage();
+        checkoutCompletePage
+                .clickOnBackHomeButton()
+                .assertThat()
+                .userIsOnHomePage()
+                .cartIconNumberIsValid(0)
+                .allItemsHaveButtonsWithText("Add to cart");
+        //.buttonChangeNameTo("Add to cart", )
+    }
 }

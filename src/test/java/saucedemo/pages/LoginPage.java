@@ -15,9 +15,7 @@ public class LoginPage extends BasePage {
         super(driver);
         super.url += Route.LOGIN;
     }
-    public CMenu getMenu(){
-        return null;
-    }
+    
     @Override
     public void waitForPageToLoad() {
         getLoginButton();

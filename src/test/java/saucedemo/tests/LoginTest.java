@@ -1,13 +1,16 @@
 package saucedemo.tests;
 
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import saucedemo.base.BasePage;
 import saucedemo.base.BaseTest;
 import saucedemo.data.DataProviders;
 import saucedemo.data.UserLoginDto;
-import saucedemo.pages.LoginPage;
+import saucedemo.pages.*;
 import saucedemo.utilities.DataManager;
+import saucedemo.utilities.Route;
 
 public class LoginTest extends BaseTest {
     private LoginPage loginPage;
@@ -16,6 +19,7 @@ public class LoginTest extends BaseTest {
     public void loginPageMethodSetup() {
         loginPage = new LoginPage(driver);
         loginPage.navigateTo();
+        driver.manage().deleteAllCookies();
     }
 
     //===================================================
@@ -27,9 +31,9 @@ public class LoginTest extends BaseTest {
     )
     public void testSuccessfulUserLogin(UserLoginDto user) {
         loginPage.loginWithValidCreds(user.getUsername(), user.getPassword())
-                    .assertThat()
-                    .userIsOnHomePage()
-                    .logOutButtonIsPresent();
+                .assertThat()
+                .userIsOnHomePage()
+                .logOutButtonIsPresent();
     }
 
     //===================================================
@@ -41,13 +45,48 @@ public class LoginTest extends BaseTest {
     )
     public void testUnsuccessfulUserLogin(UserLoginDto user) {
         loginPage.loginWithInvalidCreds(user.getUsername(), user.getPassword())
-                    .assertThat()
-                    .userIsOnLoginPage()
-                    .loginButtonIsVisible()
-                    .errorMessageAppears(user.getMessage());
+                .assertThat()
+                .userIsOnLoginPage()
+                .loginButtonIsVisible()
+                .errorMessageAppears(user.getMessage());
     }
 
     //===================================================
 
-    // User can not directly navigate to any page except login page without logging in previously
+    // User can log out when logged in -> MenuTest (better)
+
+    //===================================================
+
+    @Test(
+            description =
+                    "When user tries to navigate to any of the pages except log in page" +
+                            "without previously logging in or adding cookie, then" +
+                            "they are redirected to the log in page and proper error message appears",
+            dataProvider = "PagesUrls",
+            dataProviderClass = DataProviders.class
+    )
+    public void testUnsuccessfulNavigationWithoutPreviouslyLoggingOrAddingCookie(String url) {
+        driver.navigate().to(url);
+        loginPage.assertThat()
+                .userIsOnLoginPage()
+                .properErrorMessageAppearsForPageWhereUserWantedToNavigate(url);
+
+    }
+
+    //===================================================
+
+    @Test(
+            description =
+                            "When user tries to navigate to the any of the pages" +
+                            "with previously adding a cookie, then" +
+                            "they are redirected to the wanted page",
+            dataProvider = "PagesUrls",
+            dataProviderClass = DataProviders.class
+    )
+    public void testSuccessfulNavigationWithPreviouslyAddingACookieOnUrl(String url) {
+        loginPage.setUserCookie();
+        driver.navigate().to(url);
+        Assert.assertEquals(driver.getCurrentUrl(), url);
+    }
+
 }

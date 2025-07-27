@@ -6,7 +6,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import saucedemo.asserts.CMenuAssert;
 import saucedemo.pages.CartPage;
+import saucedemo.pages.HomePage;
+import saucedemo.pages.LoginPage;
 
 public class CMenu {
     private WebDriver driver;
@@ -49,8 +52,9 @@ public class CMenu {
         return wait.until(ExpectedConditions.elementToBeClickable(closeButton));
     }
 
-    public void openMenu(){
+    public CMenu openMenu(){
         getMenuButton().click();
+        return this;
     }
     public void closeMenu(){
         getCloseButton().click();
@@ -70,11 +74,28 @@ public class CMenu {
         getResetAppStateButton().click();
         driver.navigate().refresh();
     }
+    public LoginPage clickOnLogoutButton(){
+        openMenu();
+        getLogoutButton().click();
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.waitForPageToLoad();
+        return loginPage;
+    }
     public CartPage openCartPage() {
         getCartIcon().click();
 
         CartPage cartPage = new CartPage(driver);
         cartPage.waitForPageToLoad();
         return cartPage;
+    }
+    public CMenuAssert assertThat(){
+        return new CMenuAssert(driver);
+    }
+
+    public HomePage clickOnAllItemsButton() {
+        openMenu().getAllItemsButton().click();
+        HomePage homePage = new HomePage(driver);
+        homePage.waitForPageToLoad();
+        return homePage;
     }
 }

@@ -33,4 +33,8 @@ public class DataProviders {
     public Object[][] getInvalidForm() {
         return DataManager.getInvalidForm();
     }
+    @DataProvider(name = "PagesUrls")
+    public Object[][] getPagesUrls(){
+        return DataManager.getPagesUrls();
+    }
 }

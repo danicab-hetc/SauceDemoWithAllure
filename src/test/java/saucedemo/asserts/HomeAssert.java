@@ -113,4 +113,11 @@ public class HomeAssert {
         softAssert.assertAll("Not all items on home page have remove button as should have");
         return this;
     }
+
+    public HomeAssert allItemsHaveButtonsWithText(String text) {
+        for (int i = 0; i < homePage.getProducts().size(); i++) {
+            Assert.assertEquals(homePage.getProducts().get(i).getAddRemoveButtonText(), text);
+        }
+        return this;
+    }
 }

@@ -81,4 +81,17 @@ public class DataManager {
                 {new CheckoutFormDto("Danica", "Bijeljanin", ""), "Error: Postal Code is required"}
         };
     }
+
+    public static Object[][] getPagesUrls() {
+        return new Object[][]{
+                {Route.BASE_URL + Route.HOME},
+                {Route.BASE_URL + Route.CART},
+                {Route.BASE_URL + Route.CHECKOUT_STEP_ONE},
+                {Route.BASE_URL + Route.CHECKOUT_STEP_TWO},
+                {Route.BASE_URL + Route.CHECKOUT_COMPLETE},
+                {Route.BASE_URL + Route.ITEM}
+        };
+    };
+
+
 }

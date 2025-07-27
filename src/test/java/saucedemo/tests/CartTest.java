@@ -75,4 +75,5 @@ public class CartTest extends BaseTest {
                 .cartIconNumberIsValid(0)
                 .buttonChangeNameTo("Add to cart", homePage.getProducts());
     }
+
 }
