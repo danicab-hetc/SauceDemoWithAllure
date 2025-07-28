@@ -33,7 +33,6 @@ public class CartPage extends BasePage {
     public WebElement getContinueShoppingButton() {
         return wait.until(ExpectedConditions.elementToBeClickable(continueShoppingButton));
     }
-
     public WebElement getCheckoutButton() {
         return wait.until(ExpectedConditions.elementToBeClickable(checkoutButton));
     }
