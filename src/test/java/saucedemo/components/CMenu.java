@@ -1,5 +1,6 @@
 package saucedemo.components;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -52,13 +53,18 @@ public class CMenu {
         return wait.until(ExpectedConditions.elementToBeClickable(closeButton));
     }
 
+    @Step("Open menu")
     public CMenu openMenu(){
         getMenuButton().click();
         return this;
     }
+
+    @Step("Close menu")
     public void closeMenu(){
         getCloseButton().click();
     }
+
+    @Step("Check if logout button is visible")
     public boolean logoutButtonIsVisible() {
         try{
             openMenu();
@@ -69,11 +75,15 @@ public class CMenu {
         }
         return false;
     }
+
+    @Step("Click 'Reset App State' and refresh page")
     public void clickOnResetButtonAndRefresh() {
         openMenu();
         getResetAppStateButton().click();
         driver.navigate().refresh();
     }
+
+    @Step("Click on logout button")
     public LoginPage clickOnLogoutButton(){
         openMenu();
         getLogoutButton().click();
@@ -81,6 +91,8 @@ public class CMenu {
         loginPage.waitForPageToLoad();
         return loginPage;
     }
+
+    @Step("Open cart page")
     public CartPage openCartPage() {
         getCartIcon().click();
 
@@ -92,6 +104,7 @@ public class CMenu {
         return new CMenuAssert(driver);
     }
 
+    @Step("Click on 'All Items' button and go to Home Page")
     public HomePage clickOnAllItemsButton() {
         openMenu().getAllItemsButton().click();
         HomePage homePage = new HomePage(driver);

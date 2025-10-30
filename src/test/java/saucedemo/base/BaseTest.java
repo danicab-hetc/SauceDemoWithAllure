@@ -1,6 +1,7 @@
 package saucedemo.base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.qameta.allure.Allure;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.testng.ITestResult;
@@ -8,6 +9,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import saucedemo.utilities.Screenshot;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 public class BaseTest {
     protected WebDriver driver;
@@ -31,9 +35,17 @@ public class BaseTest {
                 methodName += "_" + params[0].toString();
             }
 
-            Screenshot.take(driver, className, methodName);
+            File screenshot = Screenshot.take(driver, className, methodName);
+
+            try (FileInputStream fis = new FileInputStream(screenshot)) {
+                Allure.addAttachment("Screenshot - " + methodName, fis);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
     }
+
 
     @AfterClass(alwaysRun = true)
     public void baseClassTeardown(){
