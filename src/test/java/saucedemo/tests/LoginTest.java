@@ -100,4 +100,14 @@ public class LoginTest extends BaseTest {
         Assert.assertEquals(driver.getCurrentUrl(), url);
     }
 
+    @Test( description = "Login Fail Example with Allure Screenshots", groups = { "smoke" } )
+    @Description("Login Fail Example with Allure Screenshots")
+    public void testSuccessfulUserLoginFail() {
+        loginPage.loginWithValidCreds("wrong_username", "wrong_password")
+                .assertThat()
+                .userIsOnHomePage()
+                .logOutButtonIsPresent();
+    }
+
+
 }

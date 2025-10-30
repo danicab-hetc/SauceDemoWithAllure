@@ -3,6 +3,8 @@ package saucedemo.base;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.Allure;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
@@ -18,10 +20,20 @@ public class BaseTest {
 
     @BeforeClass(alwaysRun = true)
     public void baseClassSetup(){
-//        WebDriverManager.edgedriver().setup();
-        System.setProperty("webdriver.edge.driver","drivers/msedgedriver.exe");
-        driver = new EdgeDriver();
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("linux")) {
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+            driver = new ChromeDriver(options);
+        } else {
+            System.setProperty("webdriver.edge.driver","drivers/msedgedriver.exe");
+            driver = new EdgeDriver();
+        }
+
         driver.manage().window().maximize();
+
     }
 
     @AfterMethod(alwaysRun = true)
