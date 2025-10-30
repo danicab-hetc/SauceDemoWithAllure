@@ -1,5 +1,6 @@
 package saucedemo.tests;
 
+import jdk.jfr.Description;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
@@ -10,7 +11,7 @@ import saucedemo.pages.HomePage;
 import saucedemo.pages.ItemPage;
 
 import java.util.List;
-
+@Description("Home tests")
 public class HomeTest extends BaseTest {
     private HomePage homePage;
 
@@ -28,6 +29,7 @@ public class HomeTest extends BaseTest {
         dataProvider = "sortOptions",
         dataProviderClass = DataProviders.class
     )
+    @Description("When user applies any of the sort options, then items sort properly")
     public void testSortBy(String sortName){
         homePage.sortProductBy(sortName)
                 .assertThat()
@@ -41,6 +43,7 @@ public class HomeTest extends BaseTest {
         dataProvider = "itemQuantity",
         dataProviderClass = DataProviders.class
     )
+    @Description("When user clicks on item addRemoveButton, its name is changed to opposite")
     public void testClickingOnItemButton(int quantity){
         List<CItem> items = homePage.clickOnAddToCartButtons(quantity);
         homePage.assertThat().buttonChangeNameTo("Remove", items);
@@ -56,6 +59,7 @@ public class HomeTest extends BaseTest {
         dataProvider = "itemQuantity",
         dataProviderClass = DataProviders.class
     )
+    @Description("When user clicks on add to cart buttons then cart icon updates!")
     public void testAddToCartIcon(int quantity){
         homePage.clickOnAddToCartButtons(quantity);
         homePage.assertThat().cartIconNumberIsValid(quantity);
@@ -68,6 +72,7 @@ public class HomeTest extends BaseTest {
         dataProvider = "itemQuantity",
         dataProviderClass = DataProviders.class
     )
+    @Description("When user clicks on remove button then cart icon updates!")
     public void testRemoveFromCartIcon(int quantity){
         homePage.clickOnAddToCartButtons(quantity);
         homePage.clickOnRemoveFromCartButtons(quantity);
@@ -82,6 +87,7 @@ public class HomeTest extends BaseTest {
             dataProviderClass = DataProviders.class,
             groups = { "smoke" }
     )
+    @Description("When user removes items from home page then those items are removed from cart page")
     public void testRemoveFromCartPage(int quantity){
         homePage.clickOnAddToCartButtons(quantity);
         homePage.clickOnRemoveFromCartButtons(quantity);
@@ -98,6 +104,7 @@ public class HomeTest extends BaseTest {
             description = "All items contain data",
             groups = { "smoke" }
     )
+    @Description("All items contain data")
     public void testAllItemsHaveContent(){
         homePage.assertThat().allItemsHaveContent();
     }
@@ -111,6 +118,7 @@ public class HomeTest extends BaseTest {
             dataProviderClass = DataProviders.class,
             groups = { "smoke" }
     )
+    @Description("When user clicks on item image/title then user is redirected to the item page and all data is valid")
     public void testRedirectToItemPages(String titleOrImage){
         for (int i = 0; i < homePage.getProducts().size(); i++){
             CItem citem = homePage.getProducts().get(i);
@@ -137,6 +145,7 @@ public class HomeTest extends BaseTest {
             description = "All products have valid price format",
             groups = { "smoke" }
     )
+    @Description("All products have valid price format")
     public void testValidPriceFormat(){
         homePage.assertThat().allItemsHaveValidPriceFormat();
     }

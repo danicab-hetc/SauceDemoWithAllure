@@ -1,5 +1,6 @@
 package saucedemo.components;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import saucedemo.data.ItemDto;
@@ -83,7 +84,10 @@ public class CItem {
         return getQuantity().getText().trim();
     }
     public int getQuantityValue() { return Integer.parseInt(getQuantityText());}
+
+    @Step("Click on Add/Remove button for item '{getTitleText()}'")
     public void clickOnAddRemoveButton(){ getAddRemoveButton().click();}
+
 
     public ItemDto toItemDto(String titleOrImage) {
         return new ItemDto(
@@ -95,6 +99,7 @@ public class CItem {
                 this.getAddRemoveButtonText()
         );
     }
+
     public ItemDto stepTwoToItemDto() {
         return new ItemDto(
                 this.getIdByTitle(),

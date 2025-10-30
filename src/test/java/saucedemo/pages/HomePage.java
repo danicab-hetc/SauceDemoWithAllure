@@ -1,5 +1,6 @@
 package saucedemo.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,21 +33,25 @@ public class HomePage extends BasePage {
     private final By productSort = By.className("product_sort_container");
     private final By product = By.className("inventory_item");
 
-
+    @Step("Get product sort dropdown")
     public WebElement getProductSort(){
         return wait.until(ExpectedConditions.elementToBeClickable(productSort));
     }
 
+    @Step("Get all products on the home page")
     public List<CItem> getProducts() {
         List<WebElement> items = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(product));
         return items.stream().map(item -> new CItem(item)).toList();
     }
+
+    @Step("Sort products by: {name}")
     public HomePage sortProductBy(String name){
         Select select = new Select(getProductSort());
         select.selectByVisibleText(name);
         return this;
     }
 
+    @Step("Check if products are sorted A to Z")
     public boolean isSortedAZ() {
         List<CItem> items = getProducts();
         for (int i = 1; i < items.size(); i++) {
@@ -56,6 +61,8 @@ public class HomePage extends BasePage {
         }
         return true;
     }
+
+    @Step("Check if products are sorted Z to A")
     public boolean isSortedZA() {
         List<CItem> items = getProducts();
         for (int i = 1; i < items.size(); i++) {
@@ -65,6 +72,8 @@ public class HomePage extends BasePage {
         }
         return true;
     }
+
+    @Step("Check if products are sorted by price low to high")
     public boolean isSortedPriceLowToHigh() {
         List<CItem> items = getProducts();
         for (int i = 1; i < items.size(); i++) {
@@ -76,6 +85,8 @@ public class HomePage extends BasePage {
         }
         return true;
     }
+
+    @Step("Check if products are sorted by price high to low")
     public boolean isSortedPriceHighToLow() {
         List<CItem> items = getProducts();
         for (int i = 1; i < items.size(); i++) {
@@ -88,6 +99,7 @@ public class HomePage extends BasePage {
         return true;
     }
 
+    @Step("Add first {quantity} products to cart")
     public List<CItem> clickOnAddToCartButtons(int quantity) {
         List<CItem> items = getProducts();
         List<CItem> result = new ArrayList<>();
@@ -98,10 +110,12 @@ public class HomePage extends BasePage {
         return result;
     }
 
+    @Step("Remove first {quantity} products from cart")
     public List<CItem> clickOnRemoveFromCartButtons(int quantity) {
         return clickOnAddToCartButtons(quantity);
     }
 
+    @Step("Click on item title to go to Item Page")
     public ItemPage clickOnItemTitle(CItem item) {
         item.getLinkTitleElement().click();
 
@@ -110,6 +124,7 @@ public class HomePage extends BasePage {
         return itemPage;
     }
 
+    @Step("Click on item image to go to Item Page")
     public ItemPage clickOnItemImage(CItem item) {
         item.getLinkImageElement().click();
 
@@ -118,6 +133,7 @@ public class HomePage extends BasePage {
         return itemPage;
     }
 
+    @Step("Go to item page by clicking {linkClick}")
     public ItemPage goToItemPageByClicking(String linkClick, CItem item) {
         switch(linkClick) {
             case "title" -> clickOnItemTitle(item);
@@ -129,6 +145,7 @@ public class HomePage extends BasePage {
         return new ItemPage(driver);
     }
 
+    @Step("Add first {number} items to cart and return item details")
     public List<ItemDto> addItemsToCart(int number) {
         List<CItem> items = getProducts();
         List<ItemDto> result = new ArrayList<>();
@@ -147,6 +164,7 @@ public class HomePage extends BasePage {
         return result;
     }
 
+    @Step("Reset and refresh home page")
     public HomePage resetAndRefresh() {
         this.getMenu().clickOnResetButtonAndRefresh();
         this.waitForPageToLoad();

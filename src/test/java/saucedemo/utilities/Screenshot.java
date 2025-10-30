@@ -8,7 +8,8 @@ import org.openqa.selenium.WebDriver;
 import java.io.File;
 
 public class Screenshot {
-    public static void take(WebDriver driver, String className, String methodName) {
+    public static File take(WebDriver driver, String className, String methodName) {
+        File screenshotFile = null;
         try {
             File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             String dirPath = "screenshots/" + className;
@@ -17,9 +18,14 @@ public class Screenshot {
                 dir.mkdirs();
             }
 
-            FileUtils.copyFile(srcFile, new File(dirPath, "/" + methodName + ".jpg"));
+            screenshotFile = new File(dirPath, methodName + ".jpg");
+            FileUtils.copyFile(srcFile, screenshotFile);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return screenshotFile; // vrati fajl za Allure attachment
     }
 }
+
+

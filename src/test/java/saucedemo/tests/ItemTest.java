@@ -1,5 +1,6 @@
 package saucedemo.tests;
 
+import jdk.jfr.Description;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
@@ -11,7 +12,7 @@ import saucedemo.pages.ItemPage;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Description("Item tests")
 public class ItemTest extends BaseTest {
     private ItemPage itemPage;
     private HomePage homePage;
@@ -31,6 +32,7 @@ public class ItemTest extends BaseTest {
         dataProvider = "itemClick",
         dataProviderClass = DataProviders.class
     )
+    @Description("When user clicks on add button then button name changes to remove, cart icon is updated and same item button on home page is updated as well as cart icon")
     public void testAddToCart(String titleOrImage){
         homePage.goToItemPageByClicking(titleOrImage, homePage.getProducts().getFirst())
                 .clickOnAddButton()
@@ -52,6 +54,7 @@ public class ItemTest extends BaseTest {
         dataProvider = "itemClick",
         dataProviderClass = DataProviders.class
     )
+    @Description("When user clicks on remove button then button changes name to add, cart icon is updated and same item button on home page is updated as well as cart icon")
     public void testRemoveFromCart(String titleOrImage){
         homePage.goToItemPageByClicking(titleOrImage, homePage.getProducts().getFirst())
                 .clickOnAddButton()
@@ -75,6 +78,7 @@ public class ItemTest extends BaseTest {
             dataProviderClass = DataProviders.class,
             groups = { "smoke" }
     )
+    @Description("When users adds item from item page then that item is added to the cart page")
     public void testSuccessfulAddingToCart(String titleOrImage) {
         ItemDto item = homePage.getProducts().getFirst().toItemDto(titleOrImage);
         homePage.goToItemPageByClicking(titleOrImage, homePage.getProducts().getFirst())
@@ -95,6 +99,7 @@ public class ItemTest extends BaseTest {
             dataProviderClass = DataProviders.class,
             groups = { "smoke" }
     )
+    @Description("When users removes item from item page then that item is removed from the cart page")
     public void testSuccessfulRemovingFromCart(String titleOrImage) {
         ItemDto item = homePage.getProducts().getFirst().toItemDto(titleOrImage);
         homePage.goToItemPageByClicking(titleOrImage, homePage.getProducts().getFirst())

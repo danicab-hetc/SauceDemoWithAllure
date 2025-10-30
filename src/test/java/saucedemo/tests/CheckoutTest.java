@@ -1,5 +1,6 @@
 package saucedemo.tests;
 
+import jdk.jfr.Description;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
@@ -9,7 +10,7 @@ import saucedemo.data.ItemDto;
 import saucedemo.pages.*;
 
 import java.util.List;
-
+@Description("Checkout tests")
 public class CheckoutTest extends BaseTest {
     private CheckoutCompletePage checkoutCompletePage;
     private CheckoutStepTwoPage checkoutTwoPage;
@@ -36,6 +37,7 @@ public class CheckoutTest extends BaseTest {
             dataProvider = "itemQuantity",
             dataProviderClass = DataProviders.class
     )
+    @Description("When user goes to the Checkout step one page then number of items displayed on the cart icon is valid")
     public void testValidNumberOfAddedItemsDisplayedOnTheCartIcon(int quantity) {
         homePage.addItemsToCart(quantity);
         homePage.getMenu().openCartPage()
@@ -51,6 +53,7 @@ public class CheckoutTest extends BaseTest {
             description = "When user inputs information into every form field and clicks on continue button then they are redirected to checkout step two page",
             groups = { "smoke" }
     )
+    @Description("When user goes to the Checkout step one page then number of items displayed on the cart icon is valid")
     public void testSuccessfullyRedirectingToCheckoutTwoPage() {
         checkoutOnePage.navigateTo();
         checkoutOnePage
@@ -66,6 +69,7 @@ public class CheckoutTest extends BaseTest {
             dataProvider = "invalidForm",
             dataProviderClass = DataProviders.class
     )
+    @Description("When user doesn't fill all forms and clicks on continue button then is not redirected to checkout step two page and proper error message appears ")
     public void testUnsuccessfulRedirectionWhenFormIsNotFilledProperly(CheckoutFormDto data, String errorMsg) {
         checkoutOnePage.navigateTo();
         checkoutOnePage.fillInTheFormAndContinue(
@@ -85,6 +89,7 @@ public class CheckoutTest extends BaseTest {
             dataProvider = "itemQuantity",
             dataProviderClass = DataProviders.class
     )
+    @Description("When user clicks on cancel button on the checkout step one page then they are redirected to cart page and all saved data is valid. ")
     public void testCancelCheckoutStepOnePage(int quantity) {
         List<ItemDto> addedItems = homePage.addItemsToCart(quantity);
         checkoutOnePage.navigateTo();
@@ -104,6 +109,7 @@ public class CheckoutTest extends BaseTest {
             dataProviderClass = DataProviders.class,
             groups = { "smoke" }
     )
+    @Description("When user adds items in cart and goes to checkout step two page, then all added items are present on checkout step two page.")
     public void testValidItemsContentOnCheckoutStepTwoPage(int quantity) {
         List<ItemDto> addedItems = homePage.addItemsToCart(quantity);
         checkoutTwoPage.navigateTo();
@@ -122,6 +128,7 @@ public class CheckoutTest extends BaseTest {
             dataProviderClass = DataProviders.class,
             groups = { "smoke" }
     )
+    @Description("When user adds items in cart and goes to checkout step two page, then total price is valid.")
     public void testValidTotalPrice(int quantity) {
         homePage.addItemsToCart(quantity);
         checkoutTwoPage.navigateTo();
@@ -138,6 +145,7 @@ public class CheckoutTest extends BaseTest {
             dataProvider = "itemQuantity",
             dataProviderClass = DataProviders.class
     )
+    @Description("When user is on checkout step two page and clicks on cancel button, then they are redirected to home page and added items remain added on home page as well as saved on cart page.")
     public void testSuccessfulReturningToHomePageFromCheckoutStepTwoPage(int quantity) {
         List<ItemDto> addedItems = homePage.addItemsToCart(quantity);
         checkoutTwoPage.navigateTo();
@@ -160,6 +168,7 @@ public class CheckoutTest extends BaseTest {
             dataProvider = "itemQuantity",
             dataProviderClass = DataProviders.class
     )
+    @Description("When user clicks on any item title, then they are redirected to the item page.")
     public void testValidLinksToItemPages(int quantity) {
         homePage.addItemsToCart(quantity);
         checkoutTwoPage.navigateTo();
@@ -180,6 +189,11 @@ public class CheckoutTest extends BaseTest {
             dataProviderClass = DataProviders.class,
             groups = { "smoke" }
     )
+    @Description(
+                "When user adds items into the cart and goes to checkout complete page " +
+                "by clicking finish button on checkout step two page," +
+                " then message checkout complete appears and cart icon is empty!"
+    )
     public void testSuccessfulCompleteMessageAppearing(int quantity) {
         homePage.addItemsToCart(quantity);
         checkoutTwoPage.navigateTo();
@@ -198,6 +212,7 @@ public class CheckoutTest extends BaseTest {
             dataProvider = "itemQuantity",
             dataProviderClass = DataProviders.class
     )
+    @Description("When user adds items into the cart and directly navigate to checkout complete page, then message checkout complete appears and cart icon is not empty!")
     public void testUnsuccessfulOrderCompletingAfterDirectNavigationToCheckoutCompletePage(int quantity) {
         homePage.addItemsToCart(quantity);
 
@@ -217,6 +232,10 @@ public class CheckoutTest extends BaseTest {
                     " then cart page is empty!",
             dataProvider = "itemQuantity",
             dataProviderClass = DataProviders.class
+    )
+    @Description(
+            "When user adds items into the cart, goes to checkout complete page and opens cart page," +
+            " then cart page is empty!"
     )
     public void testEmptyCartAfterGoingToCheckoutCompletePage(int quantity) {
         homePage.addItemsToCart(quantity);
@@ -242,6 +261,10 @@ public class CheckoutTest extends BaseTest {
                     "then all items on home page have add to cart buttons and cart icon is empty.",
             dataProvider = "itemQuantity",
             dataProviderClass = DataProviders.class
+    )
+    @Description(
+            "When user adds items to the cart, goes to checkout complete page and clicks on back home button," +
+            "then all items on home page have add to cart buttons and cart icon is empty."
     )
     public void testFinishButtonRedirectingToHomePageWithValidInfo(int quantity) {
         homePage.addItemsToCart(quantity);

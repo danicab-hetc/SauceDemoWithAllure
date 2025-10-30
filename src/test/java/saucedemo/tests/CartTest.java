@@ -1,5 +1,6 @@
 package saucedemo.tests;
 
+import jdk.jfr.Description;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import saucedemo.base.BaseTest;
@@ -9,7 +10,7 @@ import saucedemo.pages.CartPage;
 import saucedemo.pages.HomePage;
 
 import java.util.List;
-
+@Description("Cart tests")
 public class CartTest extends BaseTest {
     private CartPage cartPage;
     private HomePage homePage;
@@ -28,6 +29,7 @@ public class CartTest extends BaseTest {
             description = "When user goes to cart, without previously adding any item, cart is empty.",
             groups = { "smoke" }
     )
+    @Description("When user goes to cart, without previously adding any item, cart is empty.")
     public void testEmptyCart() {
         homePage.assertThat().cartIconNumberIsValid(0);
         homePage.getMenu().openCartPage()
@@ -45,6 +47,8 @@ public class CartTest extends BaseTest {
             dataProviderClass = DataProviders.class,
             groups = { "smoke" }
     )
+    @Description("When user adds items from home page, then cart page contains only added items")
+
     public void testSuccessfullyAddingItemsToCartFromHomePage(int quantity) {
         List<ItemDto> addedItems = homePage.addItemsToCart(quantity);
         homePage.assertThat().cartIconNumberIsValid(quantity);
@@ -65,6 +69,7 @@ public class CartTest extends BaseTest {
             dataProviderClass = DataProviders.class,
             groups = { "smoke" }
     )
+    @Description("Clicking on remove buttons, removes items from cart")
     public void testRemovingItems(int quantity) {
         homePage.addItemsToCart(quantity);
 
